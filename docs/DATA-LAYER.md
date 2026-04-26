@@ -18,9 +18,9 @@ Two keys, both primitives:
 | Key | Type | Values |
 |---|---|---|
 | `theme` | string | `"light"` \| `"dark"` |
-| `language` | string | `"fr"` \| `"en"` \| `"fr+en"` |
+| `uiLanguage` | string | `"fr"` \| `"en"` |
 
-Read on app mount. Written immediately on user change.
+`uiLanguage` controls the app interface only (toolbar labels, form labels, settings panel). Invoice language is a per-invoice setting stored in `invoiceDraft`. Read on app mount. Written immediately on user change.
 
 ---
 
@@ -99,8 +99,11 @@ interface LineItem {
   unitPriceHT: number;
 }
 
+type InvoiceLanguage = "fr" | "en" | "fr+en";
+
 interface InvoiceDraft {
   invoiceNumber: string;       // may be overridden by user; auto-computed otherwise
+  invoiceLanguage: InvoiceLanguage; // PDF output language; independent of the app UI language
   invoiceDate: string;         // ISO date string
   serviceDate: string;
   dueDate: string;
@@ -165,6 +168,7 @@ Sequence is zero-padded to 3 digits. Year and month are taken from the invoice d
 
 ## Notes
 
+- **UI language vs invoice language are independent.** `uiLanguage` (`fr` | `en`) is stored in `localStorage` and controls the app interface. `invoiceLanguage` (`fr` | `en` | `fr+en`) is stored inside `invoiceDraft` in IndexedDB and controls the PDF output. Changing the UI language never affects invoice language and vice versa.
 - **Draft auto-save is debounced** (300-500ms after last change) to avoid excessive IndexedDB write volume during fast typing.
 - **On app load, the draft's `invoiceNumber` is always replaced** with the current computed next number from `invoiceNumbering`. Multi-tab scenarios are out of scope; the draft number is treated as stale.
 - **Adding a new client from the combobox opens a mini-form** (name, address, VAT number, SIREN, notes) before saving to the `clients` store. The combobox input pre-fills the name field.

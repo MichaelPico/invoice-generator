@@ -47,9 +47,11 @@ This project is a static invoice generator built for a French micro-enterprise (
 
 **Language support:**
 
-- Single language mode: all labels in either French or English, user's choice
-- Bilingual mode: labels shown in both French and English side by side
-- Legal mentions (e.g. "TVA non applicable, art. 293 B du CGI") always appear in French regardless of the selected mode, as required by French law
+Two independent language settings:
+
+- **UI language** (`fr` | `en`): controls the app interface (toolbar, form labels, settings panel). The user's preference for navigating the tool itself. Persisted in `localStorage`.
+- **Invoice language** (`fr` | `en` | `fr+en`): controls the language of the generated PDF invoice. Set per-invoice in the invoice form and persisted in the draft. In `fr+en` mode, every label appears as "French / English" side by side (e.g. "Total HT / Total excl. VAT").
+- Legal mentions (e.g. "TVA non applicable, art. 293 B du CGI") always appear in French regardless of invoice language, as required by French law.
 
 ## Tech Stack
 

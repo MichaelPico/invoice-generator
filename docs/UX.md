@@ -19,13 +19,14 @@ The app never navigates away. Settings and client management open as overlays ov
 The form is the primary surface. It is always present and fills the viewport. Sections top to bottom:
 
 ```
-[ Toolbar ]                  language toggle | theme toggle | Settings | Clear Form | Generate PDF
+[ Toolbar ]                  UI language toggle (FR|EN) | theme toggle | Settings | Clear Form | Generate PDF
 
 [ Header ]
   Seller block               auto-filled from IndexedDB (company constants)
   Client block               B2B/B2C toggle | dropdown to pick a saved client, or type a new one
 
 [ Invoice Meta ]
+  Invoice language           FR | EN | FR+EN (controls PDF output language)
   Invoice number             auto-incremented, format shown, editable override
   Invoice date               date picker, defaults to today
   Service date               date picker, separate from invoice date
@@ -105,7 +106,7 @@ Opened by a "Manage clients" link in the client dropdown. Shows a list of saved 
 
 **Seller block is read-only on the form.** Company data is only editable in Settings. This avoids accidental edits and keeps the form focused on invoice-specific data.
 
-**Language toggle is in the toolbar.** Three states: FR | EN | FR+EN. Switching immediately re-labels all form fields and the PDF output. Legal mentions always stay in French.
+**Language controls are split into two.** The toolbar has a FR | EN toggle that controls the app UI language (form labels, buttons, settings). The invoice form has a separate FR | EN | FR+EN selector that controls the language of the generated PDF. These are independent: the user can run the app in English while generating invoices in French, or produce a bilingual PDF while the UI is in French. Legal mentions always stay in French on the PDF regardless of invoice language.
 
 **Desktop only.** No responsive/mobile layout. Minimum supported viewport is 1280px wide.
 
@@ -154,11 +155,11 @@ App
 | State | Where |
 |---|---|
 | Theme | localStorage |
-| Language mode | localStorage |
+| UI language (`fr` \| `en`) | localStorage |
 | Company constants | IndexedDB |
 | Client list | IndexedDB |
 | Invoice number counter + format | IndexedDB |
-| Current invoice form data | IndexedDB (persisted, restored on load) |
+| Current invoice form data (incl. invoice language) | IndexedDB (persisted, restored on load) |
 
 ---
 
@@ -174,4 +175,4 @@ The generated PDF mirrors the form sections:
 - Payment block
 - Footer: legal mention (TVA non applicable...) always in FR
 
-Bilingual mode renders each label as "FR label / EN label" in the PDF.
+Bilingual invoice mode (`fr+en`) renders each label as "FR label / EN label" in the PDF. This is independent of the app UI language.
