@@ -12,6 +12,7 @@ import { Textarea } from '../ui/textarea';
 import { ToggleGroup, ToggleGroupItem } from '../ui/toggle-group';
 import { ClientCombobox } from './ClientCombobox';
 import { ClientManagerDialog } from './ClientManagerDialog';
+import { DateInput } from './DateInput';
 
 function today() {
   return new Date().toISOString().split('T')[0];
@@ -20,6 +21,7 @@ function today() {
 function plusDays(days: number) {
   return new Date(Date.now() + days * 864e5).toISOString().split('T')[0];
 }
+
 
 function freshDraft(
   numbering: Parameters<typeof formatInvoiceNumber>[0],
@@ -119,30 +121,15 @@ export function InvoiceForm() {
         <div className="flex flex-wrap gap-4">
           <div className="flex-1 min-w-36 space-y-1.5">
             <Label htmlFor="invoiceDate">{t('invoiceDate', uiLanguage)}</Label>
-            <Input
-              id="invoiceDate"
-              type="date"
-              value={form.invoiceDate}
-              onChange={(e) => update({ invoiceDate: e.target.value })}
-            />
+            <DateInput id="invoiceDate" value={form.invoiceDate} onChange={(v) => update({ invoiceDate: v })} />
           </div>
           <div className="flex-1 min-w-36 space-y-1.5">
             <Label htmlFor="serviceDate">{t('serviceDate', uiLanguage)}</Label>
-            <Input
-              id="serviceDate"
-              type="date"
-              value={form.serviceDate}
-              onChange={(e) => update({ serviceDate: e.target.value })}
-            />
+            <DateInput id="serviceDate" value={form.serviceDate} onChange={(v) => update({ serviceDate: v })} />
           </div>
           <div className="flex-1 min-w-36 space-y-1.5">
             <Label htmlFor="dueDate">{t('dueDate', uiLanguage)}</Label>
-            <Input
-              id="dueDate"
-              type="date"
-              value={form.dueDate}
-              onChange={(e) => update({ dueDate: e.target.value })}
-            />
+            <DateInput id="dueDate" value={form.dueDate} onChange={(v) => update({ dueDate: v })} />
           </div>
         </div>
       </section>
