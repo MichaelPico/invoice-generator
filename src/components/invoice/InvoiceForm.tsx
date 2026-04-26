@@ -7,6 +7,7 @@ import { getLastClientId, saveLastClientId } from '../../lib/storage';
 import { CURRENCIES, formatAmount } from '../../lib/currencies';
 import type { InvoiceDraft, InvoiceLanguage, LineItem } from '../../types';
 import { Button } from '../ui/button';
+import { FieldHint, OptionalBadge } from '../ui/field-hint';
 import { Input } from '../ui/input';
 import { Label } from '../ui/label';
 import { Separator } from '../ui/separator';
@@ -118,13 +119,56 @@ export function InvoiceForm() {
 
   const fmt = (n: number) => formatAmount(n, form.currency);
 
+  const fr = uiLanguage === 'fr';
+  const hints = {
+    invoiceNumber: fr
+      ? 'Généré automatiquement selon vos paramètres de numérotation. Vous pouvez le modifier manuellement.'
+      : 'Auto-generated from your numbering settings. You can edit it manually.',
+    invoiceLanguage: fr
+      ? 'Langue utilisée pour les intitulés dans le PDF généré.'
+      : 'Language used for all text labels in the generated PDF.',
+    currency: fr
+      ? 'Symbole monétaire affiché sur tous les montants de la facture.'
+      : 'Currency symbol displayed on all amounts.',
+    serviceDate: fr
+      ? 'Date à laquelle la prestation a été réalisée. Peut différer de la date de facture. Laissez vide pour ne pas l\'afficher.'
+      : 'Date the work was performed. Can differ from the invoice date. Leave empty to omit.',
+    dueDate: fr
+      ? 'Date limite de paiement affichée sur la facture. Laissez vide pour ne pas l\'afficher.'
+      : 'Payment deadline shown on the invoice. Leave empty to omit.',
+    vatNumber: fr
+      ? 'Numéro de TVA intracommunautaire du client (ex. FR12345678901). Obligatoire pour les factures B2B transfrontalières en UE.'
+      : 'EU VAT identification number (e.g. FR12345678901). Required for cross-border EU B2B invoices.',
+    siren: fr
+      ? 'Numéro d\'identification de l\'entreprise cliente — les 9 premiers chiffres du SIRET.'
+      : 'French business register number — the first 9 digits of the SIRET.',
+    quantityLabel: fr
+      ? 'Unité affichée après les quantités (ex. "h", "jours", "unités"). Laissez vide pour afficher uniquement les chiffres.'
+      : 'Unit appended after quantities (e.g. "h", "days", "units"). Leave empty to show numbers only.',
+    unitPrice: fr
+      ? 'Prix par unité hors TVA.'
+      : 'Price per unit, excluding VAT.',
+    paymentTerms: fr
+      ? 'Laissez vide pour afficher la valeur par défaut : "30 jours nets".'
+      : 'Leave empty to print the default: "30 days net".',
+    paymentMethods: fr
+      ? 'Laissez vide pour afficher la valeur par défaut : "Virement bancaire".'
+      : 'Leave empty to print the default: "Bank transfer".',
+    latePaymentPenalty: fr
+      ? 'Laissez vide pour afficher le défaut légal : 3× le taux d\'intérêt légal (environ 12%/an).'
+      : 'Leave empty to print the legal default: 3× the French legal interest rate (~12%/year).',
+    earlyPaymentDiscount: fr
+      ? 'Laissez vide pour afficher "néant".'
+      : 'Leave empty to print "none".',
+  };
+
   return (
     <div className="space-y-10">
       {/* ---- Invoice meta ---- */}
       <section className="space-y-4">
         <div className="flex flex-wrap gap-4 items-end">
           <div className="flex-1 min-w-48 space-y-1.5">
-            <Label htmlFor="invoiceNumber">{t('invoiceNumber', uiLanguage)}</Label>
+            <Label htmlFor="invoiceNumber">{t('invoiceNumber', uiLanguage)} <FieldHint text={hints.invoiceNumber} /></Label>
             <Input
               id="invoiceNumber"
               value={form.invoiceNumber}
@@ -132,7 +176,7 @@ export function InvoiceForm() {
             />
           </div>
           <div className="space-y-1.5">
-            <Label>{t('invoiceLanguage', uiLanguage)}</Label>
+            <Label>{t('invoiceLanguage', uiLanguage)} <FieldHint text={hints.invoiceLanguage} /></Label>
             <ToggleGroup
               type="single"
               variant="outline"
@@ -146,7 +190,7 @@ export function InvoiceForm() {
             </ToggleGroup>
           </div>
           <div className="space-y-1.5">
-            <Label htmlFor="currency">{t('currency', uiLanguage)}</Label>
+            <Label htmlFor="currency">{t('currency', uiLanguage)} <FieldHint text={hints.currency} /></Label>
             <select
               id="currency"
               value={form.currency}
@@ -168,11 +212,11 @@ export function InvoiceForm() {
             <DateInput id="invoiceDate" value={form.invoiceDate} onChange={(v) => update({ invoiceDate: v })} />
           </div>
           <div className="flex-1 min-w-36 space-y-1.5">
-            <Label htmlFor="serviceDate">{t('serviceDate', uiLanguage)}</Label>
+            <Label htmlFor="serviceDate">{t('serviceDate', uiLanguage)}<OptionalBadge label={fr ? 'optionnel' : 'optional'} /> <FieldHint text={hints.serviceDate} /></Label>
             <DateInput id="serviceDate" value={form.serviceDate} onChange={(v) => update({ serviceDate: v })} />
           </div>
           <div className="flex-1 min-w-36 space-y-1.5">
-            <Label htmlFor="dueDate">{t('dueDate', uiLanguage)}</Label>
+            <Label htmlFor="dueDate">{t('dueDate', uiLanguage)}<OptionalBadge label={fr ? 'optionnel' : 'optional'} /> <FieldHint text={hints.dueDate} /></Label>
             <DateInput id="dueDate" value={form.dueDate} onChange={(v) => update({ dueDate: v })} />
           </div>
         </div>
@@ -274,7 +318,7 @@ export function InvoiceForm() {
             {form.isB2B && (
               <>
                 <div className="space-y-1.5">
-                  <Label htmlFor="vatNumber">{t('vatNumber', uiLanguage)}</Label>
+                  <Label htmlFor="vatNumber">{t('vatNumber', uiLanguage)}<OptionalBadge label={fr ? 'optionnel' : 'optional'} /> <FieldHint text={hints.vatNumber} /></Label>
                   <Input
                     id="vatNumber"
                     value={form.client.vatNumber ?? ''}
@@ -282,7 +326,7 @@ export function InvoiceForm() {
                   />
                 </div>
                 <div className="space-y-1.5">
-                  <Label htmlFor="siren">{t('siren', uiLanguage)}</Label>
+                  <Label htmlFor="siren">{t('siren', uiLanguage)}<OptionalBadge label={fr ? 'optionnel' : 'optional'} /> <FieldHint text={hints.siren} /></Label>
                   <Input
                     id="siren"
                     value={form.client.siren ?? ''}
@@ -304,7 +348,9 @@ export function InvoiceForm() {
         </h3>
 
         <div className="flex items-center gap-2">
-          <label className="text-xs text-muted-foreground whitespace-nowrap">{t('quantityLabel', uiLanguage)}</label>
+          <label className="text-xs text-muted-foreground whitespace-nowrap">
+            {t('quantityLabel', uiLanguage)}<OptionalBadge label={fr ? 'optionnel' : 'optional'} /> <FieldHint text={hints.quantityLabel} />
+          </label>
           <Input
             value={form.quantityLabel}
             onChange={(e) => setForm((f) => ({ ...f, quantityLabel: e.target.value }))}
@@ -319,7 +365,7 @@ export function InvoiceForm() {
               <tr className="border-b border-border text-left">
                 <th className="pb-2 pr-3 font-medium">{t('description', uiLanguage)}</th>
                 <th className="pb-2 px-2 font-medium w-20 text-right">{t('quantity', uiLanguage)}</th>
-                <th className="pb-2 px-2 font-medium w-36 text-right">{t('unitPrice', uiLanguage)}</th>
+                <th className="pb-2 px-2 font-medium w-44 text-right">{t('unitPrice', uiLanguage)} <FieldHint text={hints.unitPrice} /></th>
                 <th className="pb-2 pl-2 font-medium w-32 text-right">{t('lineTotal', uiLanguage)}</th>
                 <th className="w-9" />
               </tr>
@@ -353,7 +399,7 @@ export function InvoiceForm() {
                       <Input
                         type="number"
                         min={0}
-                        step={0.01}
+                        step={1}
                         value={li.unitPriceHT}
                         onChange={(e) =>
                           updateLine(li.id, { unitPriceHT: parseFloat(e.target.value) || 0 })
@@ -413,7 +459,7 @@ export function InvoiceForm() {
         </h3>
         <div className="space-y-3">
           <div className="space-y-1.5">
-            <Label htmlFor="paymentTerms">{t('paymentTerms', uiLanguage)}</Label>
+            <Label htmlFor="paymentTerms">{t('paymentTerms', uiLanguage)} <FieldHint text={hints.paymentTerms} /></Label>
             <Input
               id="paymentTerms"
               value={form.paymentTerms}
@@ -422,7 +468,7 @@ export function InvoiceForm() {
             />
           </div>
           <div className="space-y-1.5">
-            <Label htmlFor="paymentMethods">{t('paymentMethods', uiLanguage)}</Label>
+            <Label htmlFor="paymentMethods">{t('paymentMethods', uiLanguage)} <FieldHint text={hints.paymentMethods} /></Label>
             <Input
               id="paymentMethods"
               value={form.paymentMethods}
@@ -435,7 +481,7 @@ export function InvoiceForm() {
             />
           </div>
           <div className="space-y-1.5">
-            <Label htmlFor="latePaymentPenaltyRate">{t('latePaymentPenalty', uiLanguage)}</Label>
+            <Label htmlFor="latePaymentPenaltyRate">{t('latePaymentPenalty', uiLanguage)} <FieldHint text={hints.latePaymentPenalty} /></Label>
             <Input
               id="latePaymentPenaltyRate"
               value={form.latePaymentPenaltyRate}
@@ -444,7 +490,7 @@ export function InvoiceForm() {
             />
           </div>
           <div className="space-y-1.5">
-            <Label htmlFor="earlyPaymentDiscount">{t('earlyPaymentDiscount', uiLanguage)}</Label>
+            <Label htmlFor="earlyPaymentDiscount">{t('earlyPaymentDiscount', uiLanguage)} <FieldHint text={hints.earlyPaymentDiscount} /></Label>
             <Input
               id="earlyPaymentDiscount"
               value={form.earlyPaymentDiscount}

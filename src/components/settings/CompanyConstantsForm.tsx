@@ -3,6 +3,7 @@ import { useApp } from '../../context/AppContext';
 import { t } from '../../lib/i18n';
 import type { CompanySettings } from '../../types';
 import { Button } from '../ui/button';
+import { FieldHint } from '../ui/field-hint';
 import { Input } from '../ui/input';
 import { Label } from '../ui/label';
 import { Textarea } from '../ui/textarea';
@@ -118,7 +119,12 @@ export function CompanyConstantsForm() {
       </div>
 
       <div className="flex flex-col gap-1.5">
-        <Label htmlFor="company-siret">{t('siret', uiLanguage)}</Label>
+        <Label htmlFor="company-siret">
+          {t('siret', uiLanguage)}{' '}
+          <FieldHint text={uiLanguage === 'fr'
+            ? 'Identifiant français à 14 chiffres de votre entreprise. Imprimé sur toutes vos factures. Format : 123 456 789 00012.'
+            : '14-digit French business identifier printed on all your invoices. Format: 123 456 789 00012.'} />
+        </Label>
         <Input
           id="company-siret"
           value={form.siret}
@@ -128,7 +134,12 @@ export function CompanyConstantsForm() {
       </div>
 
       <div className="flex flex-col gap-1.5">
-        <Label htmlFor="company-iban">{t('iban', uiLanguage)}</Label>
+        <Label htmlFor="company-iban">
+          {t('iban', uiLanguage)}{' '}
+          <FieldHint text={uiLanguage === 'fr'
+            ? 'Votre numéro de compte bancaire pour les virements. Pré-remplit le champ "mode de règlement" sur les nouvelles factures.'
+            : 'Your bank account number for wire transfers. Pre-fills the payment method field on new invoices.'} />
+        </Label>
         <Input
           id="company-iban"
           value={form.iban}
@@ -138,7 +149,12 @@ export function CompanyConstantsForm() {
       </div>
 
       <div className="flex flex-col gap-1.5">
-        <Label htmlFor="company-bic">{t('bic', uiLanguage)}</Label>
+        <Label htmlFor="company-bic">
+          {t('bic', uiLanguage)}{' '}
+          <FieldHint text={uiLanguage === 'fr'
+            ? 'Code identifiant votre banque (aussi appelé code SWIFT). Généralement 8 ou 11 caractères. Certains clients en ont besoin pour les virements internationaux.'
+            : "Your bank's identifier code (also called SWIFT code). Usually 8 or 11 characters. Some clients need it for international transfers."} />
+        </Label>
         <Input
           id="company-bic"
           value={form.bic ?? ''}

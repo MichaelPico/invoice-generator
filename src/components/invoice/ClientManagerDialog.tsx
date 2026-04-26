@@ -8,6 +8,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '../ui/dialog';
+import { FieldHint, OptionalBadge } from '../ui/field-hint';
 import { Input } from '../ui/input';
 import { Label } from '../ui/label';
 import { Textarea } from '../ui/textarea';
@@ -104,7 +105,12 @@ export function ClientManagerDialog() {
               <Textarea id="cm-address" rows={2} className="resize-none" value={editing.address} onChange={(e) => patch('address', e.target.value)} />
             </div>
             <div className="space-y-1.5">
-              <Label>{uiLanguage === 'fr' ? 'Type de client' : 'Client type'}</Label>
+              <Label>
+                {uiLanguage === 'fr' ? 'Type de client' : 'Client type'}{' '}
+                <FieldHint text={uiLanguage === 'fr'
+                  ? 'B2B : entreprise (affiche les champs TVA et SIREN). B2C : particulier.'
+                  : 'B2B: business client (shows VAT and SIREN fields). B2C: individual.'} />
+              </Label>
               <ToggleGroup
                 type="single"
                 variant="outline"
@@ -118,16 +124,31 @@ export function ClientManagerDialog() {
             </div>
             <div className="grid grid-cols-2 gap-3">
               <div className="space-y-1.5">
-                <Label htmlFor="cm-vat">{t('vatNumber', uiLanguage)}</Label>
+                <Label htmlFor="cm-vat">
+                  {t('vatNumber', uiLanguage)}<OptionalBadge label={uiLanguage === 'fr' ? 'optionnel' : 'optional'} />{' '}
+                  <FieldHint text={uiLanguage === 'fr'
+                    ? 'Numéro de TVA intracommunautaire (ex. FR12345678901). Obligatoire pour les factures B2B transfrontalières en UE.'
+                    : 'EU VAT identification number (e.g. FR12345678901). Required for cross-border EU B2B invoices.'} />
+                </Label>
                 <Input id="cm-vat" value={editing.vatNumber ?? ''} onChange={(e) => patch('vatNumber', e.target.value)} />
               </div>
               <div className="space-y-1.5">
-                <Label htmlFor="cm-siren">{t('siren', uiLanguage)}</Label>
+                <Label htmlFor="cm-siren">
+                  {t('siren', uiLanguage)}<OptionalBadge label={uiLanguage === 'fr' ? 'optionnel' : 'optional'} />{' '}
+                  <FieldHint text={uiLanguage === 'fr'
+                    ? 'Numéro d\'identification de l\'entreprise — les 9 premiers chiffres du SIRET.'
+                    : 'French business register number — the first 9 digits of the SIRET.'} />
+                </Label>
                 <Input id="cm-siren" value={editing.siren ?? ''} onChange={(e) => patch('siren', e.target.value)} />
               </div>
             </div>
             <div className="space-y-1.5">
-              <Label htmlFor="cm-notes">{t('notes', uiLanguage)}</Label>
+              <Label htmlFor="cm-notes">
+                {t('notes', uiLanguage)}<OptionalBadge label={uiLanguage === 'fr' ? 'optionnel' : 'optional'} />{' '}
+                <FieldHint text={uiLanguage === 'fr'
+                  ? 'Notes internes sur ce client. Non affichées sur la facture.'
+                  : 'Internal notes about this client. Not shown on the invoice.'} />
+              </Label>
               <Textarea id="cm-notes" rows={2} className="resize-none" value={editing.notes ?? ''} onChange={(e) => patch('notes', e.target.value)} />
             </div>
 
