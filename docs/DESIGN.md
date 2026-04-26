@@ -66,6 +66,8 @@ GitHub Pages. Vite base path and any required config will be set up at the end o
 
 ## Improvements
 
+- **Add mandatory early payment discount mention (escompte)** - Include an “Early payment discount” field in the payment section. If no discount is offered, explicitly display: "Escompte pour paiement anticipé : néant", as required by French regulations.
+- **Persist last selected client** - Automatically preload the most recently used client when the app starts or a new invoice is created. The selected client is saved in IndexedDB and restored to avoid repeatedly picking the same recurring client.
 - **Welcome dialog + help button** - on first visit, show a modal summarising what the app is and its key features (French law compliance, VAT exemption, bilingual support, local-only storage); a `?` button in the navbar reopens the same dialog at any time; first-visit state tracked in `localStorage`
 - **GitHub source button** - a link button in the navbar pointing to the repository (`https://github.com/MichaelPico/invoice-generator`), opens in a new tab
 - **Logo support** - allow the user to upload a company logo in Settings, stored as a base64 data URL in IndexedDB; rendered in the PDF header above or beside the seller identity block; accepted formats: PNG, JPG, SVG
