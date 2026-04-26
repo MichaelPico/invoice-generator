@@ -8,8 +8,13 @@ export function saveTheme(theme: Theme): void {
   localStorage.setItem('theme', theme);
 }
 
+function detectDefaultLanguage(): UILanguage {
+  const lang = navigator.language ?? navigator.languages?.[0] ?? '';
+  return lang.toLowerCase().startsWith('fr') ? 'fr' : 'en';
+}
+
 export function getUILanguage(): UILanguage {
-  return (localStorage.getItem('uiLanguage') as UILanguage) ?? 'fr';
+  return (localStorage.getItem('uiLanguage') as UILanguage) ?? detectDefaultLanguage();
 }
 
 export function saveUILanguage(lang: UILanguage): void {
