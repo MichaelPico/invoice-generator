@@ -66,6 +66,7 @@ GitHub Pages. Vite base path and any required config will be set up at the end o
 
 ## Improvements
 
+- **Logo support** - allow the user to upload a company logo in Settings, stored as a base64 data URL in IndexedDB; rendered in the PDF header above or beside the seller identity block; accepted formats: PNG, JPG, SVG
 - **Invoice history** - store past invoices in IndexedDB so the user can reopen, duplicate, or reference them later
 - **Multi-currency** - support currencies beyond EUR for international clients
 - **Data export/import** - allow the user to export all IndexedDB data (clients, company constants, invoice counter) to a JSON file and re-import it, as a backup and migration mechanism
