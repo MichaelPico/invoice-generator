@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useApp } from '../../context/AppContext';
 import { t } from '../../lib/i18n';
 import type { CompanySettings } from '../../types';
@@ -10,10 +10,11 @@ import { Textarea } from '../ui/textarea';
 const EMPTY: CompanySettings = { firstName: '', lastName: '', address: '', siret: '', iban: '', bic: '' };
 
 export function CompanyConstantsForm() {
-  const { company, uiLanguage, updateCompany } = useApp();
+  const { company, logo, uiLanguage, updateCompany, updateLogo } = useApp();
   const [form, setForm] = useState<CompanySettings>(company ?? EMPTY);
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     setForm(company ?? EMPTY);
@@ -31,8 +32,60 @@ export function CompanyConstantsForm() {
     setSaved(true);
   }
 
+  function handleLogoChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      void updateLogo(reader.result as string);
+    };
+    reader.readAsDataURL(file);
+    e.target.value = '';
+  }
+
   return (
     <div className="flex flex-col gap-4">
+      {/* Logo */}
+      <div className="flex flex-col gap-1.5">
+        <Label>{t('companyLogo', uiLanguage)}</Label>
+        <div className="flex items-center gap-3">
+          {logo ? (
+            <img
+              src={logo}
+              alt="logo"
+              className="h-12 max-w-[120px] object-contain rounded border border-border bg-muted/30"
+            />
+          ) : null}
+          <div className="flex gap-2">
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={() => fileInputRef.current?.click()}
+            >
+              {t('uploadLogo', uiLanguage)}
+            </Button>
+            {logo ? (
+              <Button
+                type="button"
+                variant="ghost"
+                size="sm"
+                className="text-muted-foreground"
+                onClick={() => void updateLogo(null)}
+              >
+                {t('removeLogo', uiLanguage)}
+              </Button>
+            ) : null}
+          </div>
+        </div>
+        <input
+          ref={fileInputRef}
+          type="file"
+          accept="image/png,image/jpeg,image/svg+xml"
+          className="hidden"
+          onChange={handleLogoChange}
+        />
+      </div>
       <div className="flex flex-col gap-1.5">
         <Label htmlFor="company-lastname">{t('lastName', uiLanguage)}</Label>
         <Input

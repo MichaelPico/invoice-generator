@@ -1,4 +1,4 @@
-import { Document, Page, Text, View, StyleSheet } from '@react-pdf/renderer';
+import { Document, Page, Text, View, StyleSheet, Image } from '@react-pdf/renderer';
 import { format, parseISO } from 'date-fns';
 import type { CompanySettings, InvoiceDraft, InvoiceLanguage } from '../../types';
 import { ti } from '../../lib/i18n';
@@ -29,6 +29,7 @@ const s = StyleSheet.create({
 
   // Header
   header: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 28 },
+  logo: { maxHeight: 40, maxWidth: 120, marginBottom: 8, objectFit: 'contain', alignSelf: 'flex-start' },
   title: { fontSize: 22, fontFamily: 'Helvetica-Bold', letterSpacing: 1.5 },
   infoBlock: { alignItems: 'flex-end' },
   invoiceNum: { fontSize: 10, fontFamily: 'Helvetica-Bold', marginBottom: 4 },
@@ -140,9 +141,10 @@ function invoiceTitle(lang: InvoiceLanguage): string {
 interface Props {
   draft: InvoiceDraft;
   company: CompanySettings | null;
+  logo?: string | null;
 }
 
-export function InvoiceDocument({ draft, company }: Props) {
+export function InvoiceDocument({ draft, company, logo }: Props) {
   const lang = draft.invoiceLanguage;
   const totalHT = draft.lineItems.reduce((sum, li) => sum + li.quantity * li.unitPriceHT, 0);
 
@@ -152,7 +154,10 @@ export function InvoiceDocument({ draft, company }: Props) {
 
         {/* Header */}
         <View style={s.header}>
-          <Text style={s.title}>{invoiceTitle(lang)}</Text>
+          <View>
+            {logo ? <Image src={logo} style={s.logo} /> : null}
+            <Text style={s.title}>{invoiceTitle(lang)}</Text>
+          </View>
           <View style={s.infoBlock}>
             <Text style={s.invoiceNum}>
               <Text style={s.infoMuted}>{ti('invoiceNumberLabel', lang)} </Text>

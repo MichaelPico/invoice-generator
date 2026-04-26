@@ -20,6 +20,9 @@ import {
   getDraft,
   saveDraft,
   clearDraft,
+  getLogo,
+  saveLogo,
+  clearLogo,
 } from '../lib/db';
 import { getTheme, saveTheme, getUILanguage, saveUILanguage } from '../lib/storage';
 
@@ -37,6 +40,7 @@ interface AppContextValue {
   numbering: InvoiceNumberingConfig;
   clients: Client[];
   draft: InvoiceDraft | null;
+  logo: string | null;
   resetKey: number;
   setTheme: (t: Theme) => void;
   setUILanguage: (l: UILanguage) => void;
@@ -48,6 +52,7 @@ interface AppContextValue {
   removeClientEntry: (id: number) => Promise<void>;
   updateDraft: (d: InvoiceDraft) => Promise<void>;
   resetDraft: () => Promise<void>;
+  updateLogo: (dataUrl: string | null) => Promise<void>;
 }
 
 const AppContext = createContext<AppContextValue | null>(null);
@@ -66,6 +71,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const [numbering, setNumbering] = useState<InvoiceNumberingConfig>(DEFAULT_NUMBERING);
   const [clients, setClients] = useState<Client[]>([]);
   const [draft, setDraft] = useState<InvoiceDraft | null>(null);
+  const [logo, setLogo] = useState<string | null>(null);
   const [resetKey, setResetKey] = useState(0);
 
   useEffect(() => {
@@ -73,16 +79,18 @@ export function AppProvider({ children }: { children: ReactNode }) {
     setUILanguageState(getUILanguage());
 
     async function load() {
-      const [comp, num, cls, drft] = await Promise.all([
+      const [comp, num, cls, drft, lg] = await Promise.all([
         getCompany(),
         getNumbering(),
         getAllClients(),
         getDraft(),
+        getLogo(),
       ]);
       if (comp) setCompany(comp);
       if (num) setNumbering(num);
       setClients(cls);
       if (drft) setDraft(drft);
+      if (lg) setLogo(lg);
       setLoading(false);
     }
     load();
@@ -143,6 +151,15 @@ export function AppProvider({ children }: { children: ReactNode }) {
     setResetKey((k) => k + 1);
   }
 
+  async function updateLogo(dataUrl: string | null) {
+    if (dataUrl) {
+      await saveLogo(dataUrl);
+    } else {
+      await clearLogo();
+    }
+    setLogo(dataUrl);
+  }
+
   const value: AppContextValue = {
     loading,
     theme,
@@ -151,6 +168,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
     numbering,
     clients,
     draft,
+    logo,
     resetKey,
     setTheme,
     setUILanguage,
@@ -162,6 +180,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
     removeClientEntry,
     updateDraft,
     resetDraft,
+    updateLogo,
   };
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;

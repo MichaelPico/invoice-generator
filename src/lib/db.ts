@@ -24,18 +24,27 @@ interface InvoiceDB extends DBSchema {
     key: string;
     value: InvoiceDraft;
   };
+  logo: {
+    key: string;
+    value: string;
+  };
 }
 
 const DB_NAME = 'invoice-generator';
-const DB_VERSION = 1;
+const DB_VERSION = 2;
 
 function getDB() {
   return openDB<InvoiceDB>(DB_NAME, DB_VERSION, {
-    upgrade(db) {
-      db.createObjectStore('company');
-      db.createObjectStore('invoiceNumbering');
-      db.createObjectStore('clients', { autoIncrement: true, keyPath: 'id' });
-      db.createObjectStore('invoiceDraft');
+    upgrade(db, oldVersion) {
+      if (oldVersion < 1) {
+        db.createObjectStore('company');
+        db.createObjectStore('invoiceNumbering');
+        db.createObjectStore('clients', { autoIncrement: true, keyPath: 'id' });
+        db.createObjectStore('invoiceDraft');
+      }
+      if (oldVersion < 2) {
+        db.createObjectStore('logo');
+      }
     },
   });
 }
@@ -102,4 +111,19 @@ export async function saveDraft(draft: InvoiceDraft): Promise<void> {
 export async function clearDraft(): Promise<void> {
   const db = await getDB();
   await db.delete('invoiceDraft', 'current');
+}
+
+export async function getLogo(): Promise<string | undefined> {
+  const db = await getDB();
+  return db.get('logo', 'data');
+}
+
+export async function saveLogo(dataUrl: string): Promise<void> {
+  const db = await getDB();
+  await db.put('logo', dataUrl, 'data');
+}
+
+export async function clearLogo(): Promise<void> {
+  const db = await getDB();
+  await db.delete('logo', 'data');
 }

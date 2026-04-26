@@ -9,30 +9,33 @@ import { InvoiceDocument } from './InvoiceDocument';
 interface Props {
   draft: InvoiceDraft;
   company: CompanySettings | null;
+  logo?: string | null;
   open: boolean;
   onClose: () => void;
   onDownloaded: () => void;
 }
 
-export function PDFPreviewDialog({ draft, company, open, onClose, onDownloaded }: Props) {
+export function PDFPreviewDialog({ draft, company, logo, open, onClose, onDownloaded }: Props) {
   const [pdfUrl, setPdfUrl] = useState<string | null>(null);
   const [generating, setGenerating] = useState(false);
 
   // Capture props at open time so the PDF doesn't regenerate if form changes behind the dialog
   const capturedDraft = useRef(draft);
   const capturedCompany = useRef(company);
+  const capturedLogo = useRef(logo);
 
   useEffect(() => {
     if (!open) return;
     capturedDraft.current = draft;
     capturedCompany.current = company;
+    capturedLogo.current = logo;
 
     let url: string | null = null;
     let cancelled = false;
     setGenerating(true);
     setPdfUrl(null);
 
-    pdf(<InvoiceDocument draft={capturedDraft.current} company={capturedCompany.current} />)
+    pdf(<InvoiceDocument draft={capturedDraft.current} company={capturedCompany.current} logo={capturedLogo.current} />)
       .toBlob()
       .then((blob) => {
         if (cancelled) return;

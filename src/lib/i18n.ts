@@ -72,6 +72,11 @@ const labels = {
 
   // Entrepreneur label prefix
   entrepreneurLabel: { fr: 'Entrepreneur individuel', en: 'Individual entrepreneur' },
+
+  // Logo
+  companyLogo: { fr: "Logo de l'entreprise", en: 'Company logo' },
+  uploadLogo: { fr: 'Télécharger un logo', en: 'Upload logo' },
+  removeLogo: { fr: 'Supprimer', en: 'Remove' },
 } as const;
 
 export type LabelKey = keyof typeof labels;

@@ -9,7 +9,7 @@ import { SettingsPanel } from './settings/SettingsPanel';
 import { PDFPreviewDialog } from './invoice/PDFPreviewDialog';
 
 export function Toolbar() {
-  const { theme, uiLanguage, setTheme, setUILanguage, resetDraft, draft, company, advanceCounter } = useApp();
+  const { theme, uiLanguage, setTheme, setUILanguage, resetDraft, draft, company, logo, advanceCounter } = useApp();
   const [pdfOpen, setPdfOpen] = useState(false);
 
   return (
@@ -90,6 +90,7 @@ export function Toolbar() {
         <PDFPreviewDialog
           draft={draft}
           company={company}
+          logo={logo}
           open={pdfOpen}
           onClose={() => setPdfOpen(false)}
           onDownloaded={() => void advanceCounter()}
