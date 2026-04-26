@@ -61,6 +61,7 @@ const labels = {
   paymentTerms: { fr: 'Conditions de paiement', en: 'Payment terms' },
   paymentMethods: { fr: 'Moyens de paiement', en: 'Payment methods' },
   latePaymentPenalty: { fr: 'Pénalités de retard', en: 'Late payment penalty rate' },
+  earlyPaymentDiscount: { fr: 'Escompte pour paiement anticipé', en: 'Early payment discount' },
   flatRecoveryFee: {
     fr: 'Indemnité forfaitaire de recouvrement : 40 €',
     en: 'Flat recovery fee: EUR 40',

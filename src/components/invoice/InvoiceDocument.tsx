@@ -166,16 +166,10 @@ export function InvoiceDocument({ draft, company }: Props) {
         <View style={s.parties}>
           <View style={s.party}>
             <Text style={s.partyHeading}>{ti('sellerInfo', lang)}</Text>
-            {company ? (
-              <>
-                <Text style={s.partySecondary}>{ti('entrepreneurLabel', lang)}</Text>
-                <Text style={s.partyPrimary}>{company.name}</Text>
-                <Text style={s.partySecondary}>{company.address}</Text>
-                <Text style={s.partySecondary}>SIRET : {company.siret}</Text>
-              </>
-            ) : (
-              <Text style={s.partySecondary}>-</Text>
-            )}
+            <Text style={s.partySecondary}>{ti('entrepreneurLabel', lang)}</Text>
+            <Text style={s.partyPrimary}>{company?.name || '<NOM>'}</Text>
+            <Text style={s.partySecondary}>{company?.address || '<ADRESSE>'}</Text>
+            <Text style={s.partySecondary}>SIRET : {company?.siret || '<SIRET>'}</Text>
           </View>
 
           <View style={s.partyRight}>
@@ -234,43 +228,39 @@ export function InvoiceDocument({ draft, company }: Props) {
         <View style={s.paySection}>
           <Text style={s.sectionHeading}>{ti('paymentTerms', lang)}</Text>
 
-          {draft.paymentTerms ? (
-            <View style={s.payRow}>
-              <Text style={s.payLabel}>{ti('paymentTerms', lang)}</Text>
-              <Text style={s.payValue}>{draft.paymentTerms}</Text>
-            </View>
-          ) : null}
+          <View style={s.payRow}>
+            <Text style={s.payLabel}>{ti('paymentTerms', lang)}</Text>
+            <Text style={s.payValue}>{draft.paymentTerms || (lang === 'en' ? '30 days net' : '30 jours nets')}</Text>
+          </View>
 
-          {draft.paymentMethods ? (
-            <View style={s.payRow}>
-              <Text style={s.payLabel}>{ti('paymentMethods', lang)}</Text>
-              <Text style={s.payValue}>{draft.paymentMethods}</Text>
-            </View>
-          ) : null}
+          <View style={s.payRow}>
+            <Text style={s.payLabel}>{ti('paymentMethods', lang)}</Text>
+            <Text style={s.payValue}>{draft.paymentMethods || (lang === 'en' ? 'Bank transfer' : 'Virement bancaire')}</Text>
+          </View>
 
-          {company?.iban ? (
-            <View style={s.payRow}>
-              <Text style={s.payLabel}>IBAN</Text>
-              <Text style={s.payValue}>{company.iban}</Text>
-            </View>
-          ) : null}
+          <View style={s.payRow}>
+            <Text style={s.payLabel}>IBAN</Text>
+            <Text style={s.payValue}>{company?.iban || '<IBAN>'}</Text>
+          </View>
+
+          <View style={s.payRow}>
+            <Text style={s.payLabel}>{ti('earlyPaymentDiscount', lang)}</Text>
+            <Text style={s.payValue}>{draft.earlyPaymentDiscount || 'néant'}</Text>
+          </View>
+
+          <View style={s.payRow}>
+            <Text style={s.payLabel}>{ti('latePaymentPenalty', lang)}</Text>
+            <Text style={s.payValue}>{draft.latePaymentPenaltyRate || "12% par an (3 fois le taux d'intérêt légal)"}</Text>
+          </View>
 
           {draft.isB2B ? (
-            <>
-              {draft.latePaymentPenaltyRate ? (
-                <View style={[s.payRow, { marginTop: 6 }]}>
-                  <Text style={s.payLabel}>{ti('latePaymentPenalty', lang)}</Text>
-                  <Text style={s.payValue}>{draft.latePaymentPenaltyRate}</Text>
-                </View>
-              ) : null}
-              <Text style={s.legalNote}>
-                {lang === 'en'
-                  ? 'Flat recovery fee: EUR 40 in the event of late payment (art. D. 441-5 of the French Commercial Code).'
-                  : lang === 'fr+en'
-                  ? 'Indemnite forfaitaire de recouvrement : 40 EUR en cas de retard de paiement (art. D. 441-5 du Code de commerce). / Flat recovery fee: EUR 40 in the event of late payment (art. D. 441-5 of the French Commercial Code).'
-                  : 'Indemnite forfaitaire de recouvrement : 40 EUR en cas de retard de paiement (art. D. 441-5 du Code de commerce).'}
-              </Text>
-            </>
+            <Text style={s.legalNote}>
+              {lang === 'en'
+                ? 'Flat recovery fee: EUR 40 in the event of late payment (art. D. 441-5 of the French Commercial Code).'
+                : lang === 'fr+en'
+                ? 'Indemnite forfaitaire de recouvrement : 40 EUR en cas de retard de paiement (art. D. 441-5 du Code de commerce). / Flat recovery fee: EUR 40 in the event of late payment (art. D. 441-5 of the French Commercial Code).'
+                : 'Indemnite forfaitaire de recouvrement : 40 EUR en cas de retard de paiement (art. D. 441-5 du Code de commerce).'}
+            </Text>
           ) : null}
         </View>
 

@@ -49,4 +49,5 @@ export interface InvoiceDraft {
   paymentTerms: string;
   paymentMethods: string;
   latePaymentPenaltyRate: string;
+  earlyPaymentDiscount: string;
 }

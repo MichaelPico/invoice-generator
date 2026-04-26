@@ -39,6 +39,7 @@ function freshDraft(
     paymentTerms: '',
     paymentMethods: iban ? `Virement bancaire - IBAN : ${iban}` : '',
     latePaymentPenaltyRate: '',
+    earlyPaymentDiscount: '',
   };
 }
 
@@ -395,6 +396,15 @@ export function InvoiceForm() {
               value={form.latePaymentPenaltyRate}
               onChange={(e) => update({ latePaymentPenaltyRate: e.target.value })}
               placeholder={uiLanguage === 'fr' ? 'Ex : 3x le taux légal' : 'e.g. 3x legal rate'}
+            />
+          </div>
+          <div className="space-y-1.5">
+            <Label htmlFor="earlyPaymentDiscount">{t('earlyPaymentDiscount', uiLanguage)}</Label>
+            <Input
+              id="earlyPaymentDiscount"
+              value={form.earlyPaymentDiscount}
+              onChange={(e) => update({ earlyPaymentDiscount: e.target.value })}
+              placeholder={uiLanguage === 'fr' ? 'Ex : néant' : 'e.g. none'}
             />
           </div>
           {form.isB2B && (
