@@ -87,6 +87,11 @@ const s = StyleSheet.create({
   ttcValue: { fontFamily: 'Helvetica-Bold', fontSize: 10 },
   vatMention: { fontSize: 7.5, color: C.muted, fontStyle: 'italic', marginTop: 6, textAlign: 'right' },
 
+  // Seller fields
+  sellerRow: { flexDirection: 'row', marginBottom: 2 },
+  sellerLabel: { color: C.muted, width: 88, fontSize: 8.5 },
+  sellerValue: { flex: 1, fontSize: 8.5 },
+
   // Payment
   paySection: { marginTop: 8 },
   sectionHeading: {
@@ -99,6 +104,7 @@ const s = StyleSheet.create({
   },
   payRow: { flexDirection: 'row', marginBottom: 3 },
   payLabel: { color: C.muted, width: 96, fontSize: 8.5 },
+  payLabelWide: { color: C.muted, width: 160, fontSize: 8.5 },
   payValue: { flex: 1, fontSize: 8.5 },
   legalNote: { fontSize: 7.5, color: C.muted, marginTop: 10, lineHeight: 1.6 },
 });
@@ -142,7 +148,10 @@ export function InvoiceDocument({ draft, company }: Props) {
         <View style={s.header}>
           <Text style={s.title}>{invoiceTitle(lang)}</Text>
           <View style={s.infoBlock}>
-            <Text style={s.invoiceNum}>{draft.invoiceNumber || '<INVOICE_NUMBER>'}</Text>
+            <Text style={s.invoiceNum}>
+              <Text style={s.infoMuted}>{ti('invoiceNumberLabel', lang)} </Text>
+              {draft.invoiceNumber || '<INVOICE_NUMBER>'}
+            </Text>
             <Text style={s.infoLine}>
               <Text style={s.infoMuted}>{ti('invoiceDate', lang)} : </Text>
               {fmtDate(draft.invoiceDate, lang)}
@@ -166,10 +175,23 @@ export function InvoiceDocument({ draft, company }: Props) {
         <View style={s.parties}>
           <View style={s.party}>
             <Text style={s.partyHeading}>{ti('sellerInfo', lang)}</Text>
-            <Text style={s.partySecondary}>{ti('entrepreneurLabel', lang)}</Text>
-            <Text style={s.partyPrimary}>{company?.name || '<NOM>'}</Text>
-            <Text style={s.partySecondary}>{company?.address || '<ADRESSE>'}</Text>
-            <Text style={s.partySecondary}>SIRET : {company?.siret || '<SIRET>'}</Text>
+            <Text style={[s.partySecondary, { marginBottom: 6 }]}>{ti('entrepreneurLabel', lang)}</Text>
+            <View style={s.sellerRow}>
+              <Text style={s.sellerLabel}>{ti('lastName', lang)} :</Text>
+              <Text style={s.sellerValue}>{company?.lastName || '<NOM>'}</Text>
+            </View>
+            <View style={s.sellerRow}>
+              <Text style={s.sellerLabel}>{ti('firstName', lang)} :</Text>
+              <Text style={s.sellerValue}>{company?.firstName || '<PRÉNOM>'}</Text>
+            </View>
+            <View style={s.sellerRow}>
+              <Text style={s.sellerLabel}>Numéro de Siret :</Text>
+              <Text style={s.sellerValue}>{company?.siret || '<SIRET>'}</Text>
+            </View>
+            <View style={s.sellerRow}>
+              <Text style={s.sellerLabel}>{ti('address', lang)} :</Text>
+              <Text style={s.sellerValue}>{company?.address || '<ADRESSE>'}</Text>
+            </View>
           </View>
 
           <View style={s.partyRight}>
@@ -229,28 +251,24 @@ export function InvoiceDocument({ draft, company }: Props) {
           <Text style={s.sectionHeading}>{ti('paymentTerms', lang)}</Text>
 
           <View style={s.payRow}>
-            <Text style={s.payLabel}>{ti('paymentTerms', lang)}</Text>
-            <Text style={s.payValue}>{draft.paymentTerms || (lang === 'en' ? '30 days net' : '30 jours nets')}</Text>
+            <Text style={lang === 'fr+en' ? s.payLabelWide : s.payLabel}>{ti('paymentTerms', lang)}</Text>
+            <Text style={s.payValue}>{draft.paymentTerms || (lang === 'en' ? '30 days net' : lang === 'fr+en' ? '30 jours nets / 30 days net' : '30 jours nets')}</Text>
           </View>
-
           <View style={s.payRow}>
-            <Text style={s.payLabel}>{ti('paymentMethods', lang)}</Text>
-            <Text style={s.payValue}>{draft.paymentMethods || (lang === 'en' ? 'Bank transfer' : 'Virement bancaire')}</Text>
+            <Text style={lang === 'fr+en' ? s.payLabelWide : s.payLabel}>{ti('paymentMethods', lang)}</Text>
+            <Text style={s.payValue}>{draft.paymentMethods || (lang === 'en' ? 'Bank transfer' : lang === 'fr+en' ? 'Virement bancaire / Bank transfer' : 'Virement bancaire')}</Text>
           </View>
-
           <View style={s.payRow}>
             <Text style={s.payLabel}>IBAN</Text>
             <Text style={s.payValue}>{company?.iban || '<IBAN>'}</Text>
           </View>
-
           <View style={s.payRow}>
-            <Text style={s.payLabel}>{ti('earlyPaymentDiscount', lang)}</Text>
-            <Text style={s.payValue}>{draft.earlyPaymentDiscount || 'néant'}</Text>
+            <Text style={lang === 'fr+en' ? s.payLabelWide : s.payLabel}>{ti('earlyPaymentDiscount', lang)}</Text>
+            <Text style={s.payValue}>{draft.earlyPaymentDiscount || (lang === 'fr+en' ? 'néant / none' : 'néant')}</Text>
           </View>
-
           <View style={s.payRow}>
-            <Text style={s.payLabel}>{ti('latePaymentPenalty', lang)}</Text>
-            <Text style={s.payValue}>{draft.latePaymentPenaltyRate || "12% par an (3 fois le taux d'intérêt légal)"}</Text>
+            <Text style={lang === 'fr+en' ? s.payLabelWide : s.payLabel}>{ti('latePaymentPenalty', lang)}</Text>
+            <Text style={s.payValue}>{draft.latePaymentPenaltyRate || (lang === 'en' ? "12% per year (3× legal interest rate)" : lang === 'fr+en' ? "12% par an / 12% per year" : "12% par an (3 fois le taux d'intérêt légal)")}</Text>
           </View>
 
           {draft.isB2B ? (

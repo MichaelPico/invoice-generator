@@ -11,7 +11,8 @@ const labels = {
   invoiceNumberingSettings: { fr: 'Numérotation des factures', en: 'Invoice Numbering' },
 
   // Company form
-  companyName: { fr: 'Nom', en: 'Name' },
+  firstName: { fr: 'Prénom', en: 'First name' },
+  lastName: { fr: 'Nom', en: 'Last name' },
   address: { fr: 'Adresse', en: 'Address' },
   siret: { fr: 'SIRET', en: 'SIRET' },
   iban: { fr: 'IBAN', en: 'IBAN' },
@@ -40,6 +41,7 @@ const labels = {
   delete: { fr: 'Supprimer', en: 'Delete' },
 
   // Invoice meta
+  invoiceNumberLabel: { fr: 'FACTURE N°', en: 'INVOICE N°' },
   invoiceNumber: { fr: 'Numéro de facture', en: 'Invoice number' },
   invoiceLanguage: { fr: 'Langue de la facture', en: 'Invoice language' },
   invoiceDate: { fr: 'Date de facture', en: 'Invoice date' },

@@ -4,7 +4,8 @@ export type InvoiceLanguage = 'fr' | 'en' | 'fr+en';
 export type NumberFormat = 'YYYY-SEQ' | 'YYYY-MM-SEQ' | 'CUSTOM-YYYY-SEQ';
 
 export interface CompanySettings {
-  name: string;
+  firstName: string;
+  lastName: string;
   address: string;
   siret: string;
   iban: string;

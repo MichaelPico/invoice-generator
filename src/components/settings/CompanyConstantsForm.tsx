@@ -7,7 +7,7 @@ import { Input } from '../ui/input';
 import { Label } from '../ui/label';
 import { Textarea } from '../ui/textarea';
 
-const EMPTY: CompanySettings = { name: '', address: '', siret: '', iban: '' };
+const EMPTY: CompanySettings = { firstName: '', lastName: '', address: '', siret: '', iban: '' };
 
 export function CompanyConstantsForm() {
   const { company, uiLanguage, updateCompany } = useApp();
@@ -34,12 +34,22 @@ export function CompanyConstantsForm() {
   return (
     <div className="flex flex-col gap-4">
       <div className="flex flex-col gap-1.5">
-        <Label htmlFor="company-name">{t('companyName', uiLanguage)}</Label>
+        <Label htmlFor="company-lastname">{t('lastName', uiLanguage)}</Label>
         <Input
-          id="company-name"
-          value={form.name}
-          onChange={(e) => set('name', e.target.value)}
-          placeholder="Jean Dupont"
+          id="company-lastname"
+          value={form.lastName}
+          onChange={(e) => set('lastName', e.target.value)}
+          placeholder="Dupont"
+        />
+      </div>
+
+      <div className="flex flex-col gap-1.5">
+        <Label htmlFor="company-firstname">{t('firstName', uiLanguage)}</Label>
+        <Input
+          id="company-firstname"
+          value={form.firstName}
+          onChange={(e) => set('firstName', e.target.value)}
+          placeholder="Jean"
         />
       </div>
 

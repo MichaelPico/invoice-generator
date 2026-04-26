@@ -161,7 +161,7 @@ export function InvoiceForm() {
           </h3>
           {company ? (
             <div className="text-sm space-y-0.5">
-              <p className="font-medium">{company.name}</p>
+              <p className="font-medium">{company.lastName} {company.firstName}</p>
               <p className="text-muted-foreground whitespace-pre-line">{company.address}</p>
               <p className="text-muted-foreground">SIRET : {company.siret}</p>
               {company.iban && (
