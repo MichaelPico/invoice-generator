@@ -21,7 +21,10 @@ function plusDays(days: number) {
   return new Date(Date.now() + days * 864e5).toISOString().split('T')[0];
 }
 
-function freshDraft(numbering: Parameters<typeof formatInvoiceNumber>[0]): InvoiceDraft {
+function freshDraft(
+  numbering: Parameters<typeof formatInvoiceNumber>[0],
+  iban?: string,
+): InvoiceDraft {
   return {
     invoiceNumber: formatInvoiceNumber(numbering),
     invoiceLanguage: 'fr',
@@ -32,7 +35,7 @@ function freshDraft(numbering: Parameters<typeof formatInvoiceNumber>[0]): Invoi
     client: { name: '', address: '' },
     lineItems: [{ id: crypto.randomUUID(), description: '', quantity: 1, unitPriceHT: 0 }],
     paymentTerms: '',
-    paymentMethods: '',
+    paymentMethods: iban ? `Virement bancaire - IBAN : ${iban}` : '',
     latePaymentPenaltyRate: '',
   };
 }
@@ -40,7 +43,9 @@ function freshDraft(numbering: Parameters<typeof formatInvoiceNumber>[0]): Invoi
 export function InvoiceForm() {
   const { numbering, company, clients, draft, uiLanguage, updateDraft } = useApp();
 
-  const [form, setForm] = useState<InvoiceDraft>(() => draft ?? freshDraft(numbering));
+  const [form, setForm] = useState<InvoiceDraft>(
+    () => draft ?? freshDraft(numbering, company?.iban),
+  );
 
   const updateDraftRef = useRef(updateDraft);
   updateDraftRef.current = updateDraft;
@@ -390,7 +395,9 @@ export function InvoiceForm() {
               placeholder={uiLanguage === 'fr' ? 'Ex : 3x le taux légal' : 'e.g. 3x legal rate'}
             />
           </div>
-          <p className="text-xs text-muted-foreground">{t('flatRecoveryFee', uiLanguage)}</p>
+          {form.isB2B && (
+            <p className="text-xs text-muted-foreground">{t('flatRecoveryFee', uiLanguage)}</p>
+          )}
         </div>
       </section>
     </div>
