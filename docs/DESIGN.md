@@ -28,7 +28,6 @@ This project is a static invoice generator built for a French micro-enterprise (
 - Invoice number (sequential, unique); the counter is persisted in IndexedDB and can be manually adjusted by the user
 - The invoice number format is configurable by the user. Supported formats:
   - Year + sequence: `2026-001`
-  - Prefix + year + sequence: `FA-2026-001`
   - Year + month + sequence: `2026-05-001`
   - Custom prefix + year + sequence: `MP-2026-001`
 - Format choice and custom prefix are persisted in IndexedDB alongside the counter
