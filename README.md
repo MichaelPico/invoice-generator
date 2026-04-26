@@ -1,17 +1,27 @@
 # Invoice Generator
 
-A static web app for generating professional invoices, built for a French micro-enterprise. Supports French-only and bilingual (French/English) invoice formats.
+React app for issuing invoices as a French auto-entrepreneur (micro-enterprise). Runs entirely in the browser -- no backend, no account, no data leaves your machine.
 
-Client and company data (SIRET, name, address, etc.) are stored locally in the browser. No backend, no account required.
+Company info (SIRET, address, IBAN, etc.) and your client list are persisted in localStorage.
 
 ## Features
 
-- Generate invoices compliant with French micro-enterprise requirements
-- Single language (FR or EN) or bilingual (FR/EN) invoice output
-- Local storage for company constants (SIRET, name, address, payment info)
-- Local client list: save and reuse recurring client details
-- Export to PDF
-- Runs entirely in the browser, no server, no data sent anywhere
+- Invoice output in French, English, or bilingual (FR/EN) -- legal mentions always in French as required
+- VAT exemption notice auto-included: *TVA non applicable, art. 293 B du CGI*
+- Saved client list with quick-select combobox
+- Customizable invoice colors and numbering scheme
+- Multi-currency support
+- Live PDF preview and one-click PDF export
+- Deployable as a static site (GitHub Pages, Netlify, etc.)
+
+## Getting started
+
+Requires Node.js and npm.
+
+```bash
+npm install
+npm run dev
+```
 
 ## Docs
 
