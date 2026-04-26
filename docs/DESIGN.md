@@ -66,7 +66,12 @@ GitHub Pages. Vite base path and any required config will be set up at the end o
 
 ## Improvements
 
+- **Welcome dialog + help button** - on first visit, show a modal summarising what the app is and its key features (French law compliance, VAT exemption, bilingual support, local-only storage); a `?` button in the navbar reopens the same dialog at any time; first-visit state tracked in `localStorage`
+- **GitHub source button** - a link button in the navbar pointing to the repository (`https://github.com/MichaelPico/invoice-generator`), opens in a new tab
 - **Logo support** - allow the user to upload a company logo in Settings, stored as a base64 data URL in IndexedDB; rendered in the PDF header above or beside the seller identity block; accepted formats: PNG, JPG, SVG
 - **Invoice history** - store past invoices in IndexedDB so the user can reopen, duplicate, or reference them later
 - **Multi-currency** - support currencies beyond EUR for international clients
 - **Data export/import** - allow the user to export all IndexedDB data (clients, company constants, invoice counter) to a JSON file and re-import it, as a backup and migration mechanism
+- **PDF preview + print** - add a toggleable preview pane (side-by-side or drawer) that renders the invoice as a PDF in real time using `<PDFViewer>` from `@react-pdf/renderer` (already installed); updates on a short debounce as the draft changes; hidden by default to keep the layout clean; a Print button triggers the browser's print/save-as-PDF dialog scoped to the preview iframe
+- **Saved services catalog** - allow the user to save reusable service templates (description, default unit price, default quantity) in IndexedDB; when adding a line item, a searchable dropdown lets them pick a saved service and pre-fill the row; services can be created, edited, and deleted from a manage dialog similar to the existing client manager
+- **VAT support for non-exempt clients** - allow a configurable VAT percentage to be applied per invoice line item or at the invoice level; intended for scenarios where the seller invoices clients in jurisdictions that require VAT (e.g. UK post-Brexit, or if the seller's status changes); when enabled, the PDF shows a subtotal, the VAT amount, and a grand total; when disabled (default for French auto-entrepreneurs under art. 293 B CGI), the current VAT-exempt mention is shown unchanged; the VAT rate and whether it is enabled are stored per invoice in IndexedDB
