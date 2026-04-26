@@ -4,6 +4,7 @@ import type { CompanySettings, InvoiceDraft, InvoiceLanguage } from '../../types
 import type { ResolvedColors } from '../../lib/colorPresets';
 import { PRESET_COLORS } from '../../lib/colorPresets';
 import { ti } from '../../lib/i18n';
+import { formatAmount } from '../../lib/currencies';
 
 const DANGER = '#ef4444';
 
@@ -124,12 +125,6 @@ function fmtDate(dateStr: string, _lang: InvoiceLanguage): string {
   }
 }
 
-function fmtAmount(n: number): string {
-  const abs = Math.abs(n).toFixed(2);
-  const [int, dec] = abs.split('.');
-  const intFmt = int.replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
-  return (n < 0 ? '- ' : '') + intFmt + ',' + dec + ' €';
-}
 
 function invoiceTitle(lang: InvoiceLanguage): string {
   if (lang === 'fr') return 'FACTURE';
@@ -252,8 +247,8 @@ export function InvoiceDocument({ draft, company, logo, colors = PRESET_COLORS.c
             <View key={li.id} style={s.tableRow}>
               <Text style={[s.colDesc, p(li.description)]}>{li.description || '<DESCRIPTION>'}</Text>
               <Text style={s.colQty}>{draft.quantityLabel ? `${li.quantity} ${draft.quantityLabel}` : li.quantity}</Text>
-              <Text style={s.colUnit}>{fmtAmount(li.unitPriceHT)}</Text>
-              <Text style={s.colTotal}>{fmtAmount(li.quantity * li.unitPriceHT)}</Text>
+              <Text style={s.colUnit}>{formatAmount(li.unitPriceHT, draft.currency)}</Text>
+              <Text style={s.colTotal}>{formatAmount(li.quantity * li.unitPriceHT, draft.currency)}</Text>
             </View>
           ))}
         </View>
@@ -263,7 +258,7 @@ export function InvoiceDocument({ draft, company, logo, colors = PRESET_COLORS.c
           <View style={s.totalsBlock}>
             <View style={s.ttcRow}>
               <Text style={s.ttcLabel}>{ti('totalTTC', lang)}</Text>
-              <Text style={s.ttcValue}>{fmtAmount(totalHT)}</Text>
+              <Text style={s.ttcValue}>{formatAmount(totalHT, draft.currency)}</Text>
             </View>
           </View>
           <Text style={s.vatMention}>

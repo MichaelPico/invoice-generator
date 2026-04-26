@@ -46,6 +46,7 @@ const labels = {
   delete: { fr: 'Supprimer', en: 'Delete' },
 
   // Invoice meta
+  currency: { fr: 'Devise', en: 'Currency' },
   invoiceNumberLabel: { fr: 'FACTURE N°', en: 'INVOICE N°' },
   invoiceNumber: { fr: 'Numéro de facture', en: 'Invoice number' },
   invoiceLanguage: { fr: 'Langue de la facture', en: 'Invoice language' },

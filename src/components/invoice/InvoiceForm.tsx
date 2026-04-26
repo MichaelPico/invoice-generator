@@ -4,6 +4,7 @@ import { useApp } from '../../context/AppContext';
 import { t } from '../../lib/i18n';
 import { formatInvoiceNumber } from '../../lib/invoiceNumber';
 import { getLastClientId, saveLastClientId } from '../../lib/storage';
+import { CURRENCIES, formatAmount } from '../../lib/currencies';
 import type { InvoiceDraft, InvoiceLanguage, LineItem } from '../../types';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
@@ -38,6 +39,7 @@ function freshDraft(
     dueDate: plusDays(30),
     isB2B: isB2B ?? false,
     client: client ?? { name: '', address: '' },
+    currency: 'EUR',
     quantityLabel: '',
     lineItems: [{ id: crypto.randomUUID(), description: '', quantity: 1, unitPriceHT: 0 }],
     paymentTerms: '',
@@ -114,8 +116,7 @@ export function InvoiceForm() {
 
   const totalHT = form.lineItems.reduce((sum, li) => sum + li.quantity * li.unitPriceHT, 0);
 
-  const fmtEUR = (n: number) =>
-    n.toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' €';
+  const fmt = (n: number) => formatAmount(n, form.currency);
 
   return (
     <div className="space-y-10">
@@ -143,6 +144,21 @@ export function InvoiceForm() {
               <ToggleGroupItem value="en" className="text-xs px-3 h-9">EN</ToggleGroupItem>
               <ToggleGroupItem value="fr+en" className="text-xs px-3 h-9">FR+EN</ToggleGroupItem>
             </ToggleGroup>
+          </div>
+          <div className="space-y-1.5">
+            <Label htmlFor="currency">{t('currency', uiLanguage)}</Label>
+            <select
+              id="currency"
+              value={form.currency}
+              onChange={(e) => update({ currency: e.target.value })}
+              className="h-9 rounded-md border border-input bg-background px-3 text-sm focus:outline-none focus:ring-1 focus:ring-ring"
+            >
+              {CURRENCIES.map((c) => (
+                <option key={c.code} value={c.code}>
+                  {c.code} ({c.symbol})
+                </option>
+              ))}
+            </select>
           </div>
         </div>
 
@@ -346,7 +362,7 @@ export function InvoiceForm() {
                       />
                     </td>
                     <td className="py-1.5 pl-2 text-right tabular-nums font-medium">
-                      {fmtEUR(lineTotal)}
+                      {fmt(lineTotal)}
                     </td>
                     <td className="py-1.5 pl-1">
                       <Button
@@ -380,7 +396,7 @@ export function InvoiceForm() {
         <div className="w-64 space-y-2">
           <div className="flex justify-between text-sm font-semibold">
             <span>{t('totalHT', uiLanguage)}</span>
-            <span className="tabular-nums">{fmtEUR(totalHT)}</span>
+            <span className="tabular-nums">{fmt(totalHT)}</span>
           </div>
           <p className="text-xs text-muted-foreground italic">
             TVA non applicable, art. 293 B du CGI

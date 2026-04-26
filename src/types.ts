@@ -60,6 +60,7 @@ export interface InvoiceDraft {
     vatNumber?: string;
     siren?: string;
   };
+  currency: string;
   quantityLabel: string;
   lineItems: LineItem[];
   paymentTerms: string;
