@@ -97,6 +97,7 @@ const s = StyleSheet.create({
   // Seller fields
   sellerRow: { flexDirection: 'row', marginBottom: 2 },
   sellerLabel: { color: C.muted, width: 88, fontSize: 8.5 },
+  clientLabel: { color: C.muted, width: 130, fontSize: 8.5 },
   sellerValue: { flex: 1, fontSize: 8.5 },
 
   // Payment
@@ -207,15 +208,26 @@ export function InvoiceDocument({ draft, company, logo }: Props) {
 
           <View style={s.partyRight}>
             <Text style={s.partyHeading}>{ti('clientInfo', lang)}</Text>
-            <Text style={[s.partyPrimary, p(draft.client.name)]}>{draft.client.name || '<CLIENT_NAME>'}</Text>
-            <Text style={[s.partySecondary, p(draft.client.address)]}>{draft.client.address || '<ADDRESS>'}</Text>
+            <Text style={[s.partySecondary, { marginBottom: 6 }]}>{ti(draft.isB2B ? 'clientBusiness' : 'clientIndividual', lang)}</Text>
+            <View style={s.sellerRow}>
+              <Text style={s.clientLabel}>{ti('name', lang)} :</Text>
+              <Text style={[s.sellerValue, p(draft.client.name)]}>{draft.client.name || '<NOM>'}</Text>
+            </View>
+            <View style={s.sellerRow}>
+              <Text style={s.clientLabel}>{ti('address', lang)} :</Text>
+              <Text style={[s.sellerValue, p(draft.client.address)]}>{draft.client.address || '<ADRESSE>'}</Text>
+            </View>
             {draft.isB2B && draft.client.siren ? (
-              <Text style={s.partySecondary}>SIREN : {draft.client.siren}</Text>
+              <View style={s.sellerRow}>
+                <Text style={s.clientLabel}>SIREN :</Text>
+                <Text style={s.sellerValue}>{draft.client.siren}</Text>
+              </View>
             ) : null}
             {draft.isB2B && draft.client.vatNumber ? (
-              <Text style={s.partySecondary}>
-                {ti('vatNumber', lang)} : {draft.client.vatNumber}
-              </Text>
+              <View style={s.sellerRow}>
+                <Text style={s.clientLabel}>{ti('vatNumber', lang)} :</Text>
+                <Text style={s.sellerValue}>{draft.client.vatNumber}</Text>
+              </View>
             ) : null}
           </View>
         </View>
@@ -255,7 +267,7 @@ export function InvoiceDocument({ draft, company, logo }: Props) {
 
         {/* Payment */}
         <View style={s.paySection}>
-          <Text style={s.sectionHeading}>{ti('paymentTerms', lang)}</Text>
+          <Text style={s.sectionHeading}>{ti('paymentSection', lang)}</Text>
 
           <View style={s.payRow}>
             <Text style={lang === 'fr+en' ? s.payLabelWide : s.payLabel}>{ti('paymentTerms', lang)}</Text>

@@ -31,6 +31,9 @@ const labels = {
   clientInfo: { fr: 'Client', en: 'Client' },
   clientName: { fr: 'Nom du client', en: 'Client name' },
   clientAddress: { fr: 'Adresse du client', en: 'Client address' },
+  clientBusiness: { fr: 'Entreprise', en: 'Business' },
+  clientIndividual: { fr: 'Particulier', en: 'Individual' },
+  name: { fr: 'Nom', en: 'Name' },
   vatNumber: { fr: 'Numéro de TVA', en: 'VAT number' },
   siren: { fr: 'SIREN', en: 'SIREN' },
   notes: { fr: 'Notes', en: 'Notes' },
@@ -61,6 +64,7 @@ const labels = {
   totalTTC: { fr: 'Total TTC', en: 'Total incl. VAT' },
 
   // Payment
+  paymentSection: { fr: 'Règlement', en: 'Payment details' },
   paymentTerms: { fr: 'Conditions de paiement', en: 'Payment terms' },
   paymentMethods: { fr: 'Moyens de paiement', en: 'Payment methods' },
   latePaymentPenalty: { fr: 'Pénalités de retard', en: 'Late payment penalty rate' },
