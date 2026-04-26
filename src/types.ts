@@ -22,6 +22,7 @@ export interface Client {
   id?: number;
   name: string;
   address: string;
+  isB2B?: boolean;
   vatNumber?: string;
   siren?: string;
   notes?: string;
@@ -42,6 +43,7 @@ export interface InvoiceDraft {
   dueDate: string;
   isB2B: boolean;
   client: {
+    id?: number;
     name: string;
     address: string;
     vatNumber?: string;

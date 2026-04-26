@@ -16,11 +16,12 @@ interface Props {
   clients: Client[];
   uiLanguage: UILanguage;
   onSelect: (client: Client) => void;
+  initialClientId?: number | null;
 }
 
-export function ClientCombobox({ clients, uiLanguage, onSelect }: Props) {
+export function ClientCombobox({ clients, uiLanguage, onSelect, initialClientId }: Props) {
   const [open, setOpen] = useState(false);
-  const [selectedId, setSelectedId] = useState<number | null>(null);
+  const [selectedId, setSelectedId] = useState<number | null>(initialClientId ?? null);
 
   const selectedName = selectedId != null
     ? (clients.find((c) => c.id === selectedId)?.name ?? null)

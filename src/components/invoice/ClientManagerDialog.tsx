@@ -12,6 +12,7 @@ import { Input } from '../ui/input';
 import { Label } from '../ui/label';
 import { Textarea } from '../ui/textarea';
 import { Separator } from '../ui/separator';
+import { ToggleGroup, ToggleGroupItem } from '../ui/toggle-group';
 import { useApp } from '../../context/AppContext';
 import { t } from '../../lib/i18n';
 import type { Client } from '../../types';
@@ -21,6 +22,7 @@ type FormState = Omit<Client, 'id'> & { id?: number };
 const emptyForm = (): FormState => ({
   name: '',
   address: '',
+  isB2B: false,
   vatNumber: '',
   siren: '',
   notes: '',
@@ -36,7 +38,7 @@ export function ClientManagerDialog() {
   }
 
   function startEdit(c: Client) {
-    setEditing({ id: c.id, name: c.name, address: c.address, vatNumber: c.vatNumber ?? '', siren: c.siren ?? '', notes: c.notes ?? '' });
+    setEditing({ id: c.id, name: c.name, address: c.address, isB2B: c.isB2B ?? false, vatNumber: c.vatNumber ?? '', siren: c.siren ?? '', notes: c.notes ?? '' });
   }
 
   function cancelEdit() {
@@ -49,6 +51,7 @@ export function ClientManagerDialog() {
     const payload = {
       name: data.name.trim(),
       address: data.address.trim(),
+      isB2B: data.isB2B ?? false,
       vatNumber: data.vatNumber?.trim() || undefined,
       siren: data.siren?.trim() || undefined,
       notes: data.notes?.trim() || undefined,
@@ -66,7 +69,7 @@ export function ClientManagerDialog() {
     await removeClientEntry(id);
   }
 
-  function patch(field: keyof FormState, value: string) {
+  function patch(field: keyof FormState, value: string | boolean) {
     setEditing((prev) => prev ? { ...prev, [field]: value } : prev);
   }
 
@@ -99,6 +102,19 @@ export function ClientManagerDialog() {
             <div className="space-y-1.5">
               <Label htmlFor="cm-address">{t('clientAddress', uiLanguage)}</Label>
               <Textarea id="cm-address" rows={2} className="resize-none" value={editing.address} onChange={(e) => patch('address', e.target.value)} />
+            </div>
+            <div className="space-y-1.5">
+              <Label>{uiLanguage === 'fr' ? 'Type de client' : 'Client type'}</Label>
+              <ToggleGroup
+                type="single"
+                variant="outline"
+                value={editing.isB2B ? 'b2b' : 'b2c'}
+                onValueChange={(v) => v && patch('isB2B', v === 'b2b')}
+                className="h-8 justify-start"
+              >
+                <ToggleGroupItem value="b2b" className="text-xs px-2.5 h-8">{t('b2b', uiLanguage)}</ToggleGroupItem>
+                <ToggleGroupItem value="b2c" className="text-xs px-2.5 h-8">{t('b2c', uiLanguage)}</ToggleGroupItem>
+              </ToggleGroup>
             </div>
             <div className="grid grid-cols-2 gap-3">
               <div className="space-y-1.5">

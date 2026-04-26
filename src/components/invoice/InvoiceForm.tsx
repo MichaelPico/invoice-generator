@@ -3,6 +3,7 @@ import { PlusIcon, Trash2Icon } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 import { t } from '../../lib/i18n';
 import { formatInvoiceNumber } from '../../lib/invoiceNumber';
+import { getLastClientId, saveLastClientId } from '../../lib/storage';
 import type { InvoiceDraft, InvoiceLanguage, LineItem } from '../../types';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
@@ -26,6 +27,8 @@ function plusDays(days: number) {
 function freshDraft(
   numbering: Parameters<typeof formatInvoiceNumber>[0],
   iban?: string,
+  client?: InvoiceDraft['client'],
+  isB2B?: boolean,
 ): InvoiceDraft {
   return {
     invoiceNumber: formatInvoiceNumber(numbering),
@@ -33,8 +36,8 @@ function freshDraft(
     invoiceDate: today(),
     serviceDate: today(),
     dueDate: plusDays(30),
-    isB2B: false,
-    client: { name: '', address: '' },
+    isB2B: isB2B ?? false,
+    client: client ?? { name: '', address: '' },
     lineItems: [{ id: crypto.randomUUID(), description: '', quantity: 1, unitPriceHT: 0 }],
     paymentTerms: '',
     paymentMethods: iban ? `Virement bancaire - IBAN : ${iban}` : '',
@@ -46,9 +49,17 @@ function freshDraft(
 export function InvoiceForm() {
   const { numbering, company, clients, draft, uiLanguage, updateDraft } = useApp();
 
-  const [form, setForm] = useState<InvoiceDraft>(
-    () => draft ?? freshDraft(numbering, company?.iban),
-  );
+  const [form, setForm] = useState<InvoiceDraft>(() => {
+    if (draft) return draft;
+    const lastClientId = getLastClientId();
+    const lastClient = lastClientId != null ? clients.find((c) => c.id === lastClientId) : undefined;
+    return freshDraft(
+      numbering,
+      company?.iban,
+      lastClient ? { id: lastClient.id, name: lastClient.name, address: lastClient.address, vatNumber: lastClient.vatNumber, siren: lastClient.siren } : undefined,
+      lastClient?.isB2B,
+    );
+  });
 
   const updateDraftRef = useRef(updateDraft);
   updateDraftRef.current = updateDraft;
@@ -209,14 +220,18 @@ export function InvoiceForm() {
             <ClientCombobox
               clients={clients}
               uiLanguage={uiLanguage}
-              onSelect={(c) =>
+              initialClientId={form.client.id}
+              onSelect={(c) => {
+                saveLastClientId(c.id!);
+                update({ isB2B: c.isB2B ?? false });
                 updateClient({
+                  id: c.id,
                   name: c.name,
                   address: c.address,
                   vatNumber: c.vatNumber,
                   siren: c.siren,
-                })
-              }
+                });
+              }}
             />
           )}
 
