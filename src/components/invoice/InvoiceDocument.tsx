@@ -8,7 +8,13 @@ const C = {
   muted: '#71717a',
   border: '#e4e4e7',
   bg: '#f9fafb',
+  danger: '#ef4444',
 } as const;
+
+const missing = { color: C.danger } as const;
+function p(value: string | undefined | null) {
+  return value ? undefined : missing;
+}
 
 const s = StyleSheet.create({
   page: {
@@ -104,7 +110,7 @@ const s = StyleSheet.create({
   },
   payRow: { flexDirection: 'row', marginBottom: 3 },
   payLabel: { color: C.muted, width: 96, fontSize: 8.5 },
-  payLabelWide: { color: C.muted, width: 160, fontSize: 8.5 },
+  payLabelWide: { color: C.muted, width: 220, fontSize: 8.5, paddingRight: 8 },
   payValue: { flex: 1, fontSize: 8.5 },
   legalNote: { fontSize: 7.5, color: C.muted, marginTop: 10, lineHeight: 1.6 },
 });
@@ -150,7 +156,7 @@ export function InvoiceDocument({ draft, company }: Props) {
           <View style={s.infoBlock}>
             <Text style={s.invoiceNum}>
               <Text style={s.infoMuted}>{ti('invoiceNumberLabel', lang)} </Text>
-              {draft.invoiceNumber || '<INVOICE_NUMBER>'}
+              <Text style={p(draft.invoiceNumber)}>{draft.invoiceNumber || '<INVOICE_NUMBER>'}</Text>
             </Text>
             <Text style={s.infoLine}>
               <Text style={s.infoMuted}>{ti('invoiceDate', lang)} : </Text>
@@ -178,26 +184,26 @@ export function InvoiceDocument({ draft, company }: Props) {
             <Text style={[s.partySecondary, { marginBottom: 6 }]}>{ti('entrepreneurLabel', lang)}</Text>
             <View style={s.sellerRow}>
               <Text style={s.sellerLabel}>{ti('lastName', lang)} :</Text>
-              <Text style={s.sellerValue}>{company?.lastName || '<NOM>'}</Text>
+              <Text style={[s.sellerValue, p(company?.lastName)]}>{company?.lastName || '<NOM>'}</Text>
             </View>
             <View style={s.sellerRow}>
               <Text style={s.sellerLabel}>{ti('firstName', lang)} :</Text>
-              <Text style={s.sellerValue}>{company?.firstName || '<PRÉNOM>'}</Text>
+              <Text style={[s.sellerValue, p(company?.firstName)]}>{company?.firstName || '<PRÉNOM>'}</Text>
             </View>
             <View style={s.sellerRow}>
               <Text style={s.sellerLabel}>Numéro de Siret :</Text>
-              <Text style={s.sellerValue}>{company?.siret || '<SIRET>'}</Text>
+              <Text style={[s.sellerValue, p(company?.siret)]}>{company?.siret || '<SIRET>'}</Text>
             </View>
             <View style={s.sellerRow}>
               <Text style={s.sellerLabel}>{ti('address', lang)} :</Text>
-              <Text style={s.sellerValue}>{company?.address || '<ADRESSE>'}</Text>
+              <Text style={[s.sellerValue, p(company?.address)]}>{company?.address || '<ADRESSE>'}</Text>
             </View>
           </View>
 
           <View style={s.partyRight}>
             <Text style={s.partyHeading}>{ti('clientInfo', lang)}</Text>
-            <Text style={s.partyPrimary}>{draft.client.name || '<CLIENT_NAME>'}</Text>
-            <Text style={s.partySecondary}>{draft.client.address || '<ADDRESS>'}</Text>
+            <Text style={[s.partyPrimary, p(draft.client.name)]}>{draft.client.name || '<CLIENT_NAME>'}</Text>
+            <Text style={[s.partySecondary, p(draft.client.address)]}>{draft.client.address || '<ADDRESS>'}</Text>
             {draft.isB2B && draft.client.siren ? (
               <Text style={s.partySecondary}>SIREN : {draft.client.siren}</Text>
             ) : null}
@@ -221,7 +227,7 @@ export function InvoiceDocument({ draft, company }: Props) {
           </View>
           {draft.lineItems.map((li) => (
             <View key={li.id} style={s.tableRow}>
-              <Text style={s.colDesc}>{li.description || '<DESCRIPTION>'}</Text>
+              <Text style={[s.colDesc, p(li.description)]}>{li.description || '<DESCRIPTION>'}</Text>
               <Text style={s.colQty}>{li.quantity}</Text>
               <Text style={s.colUnit}>{fmtAmount(li.unitPriceHT)}</Text>
               <Text style={s.colTotal}>{fmtAmount(li.quantity * li.unitPriceHT)}</Text>
@@ -232,10 +238,6 @@ export function InvoiceDocument({ draft, company }: Props) {
         {/* Totals */}
         <View style={s.totalsOuter}>
           <View style={s.totalsBlock}>
-            <View style={s.totalRow}>
-              <Text style={s.totalLabel}>{ti('totalHT', lang)}</Text>
-              <Text style={s.totalValue}>{fmtAmount(totalHT)}</Text>
-            </View>
             <View style={s.ttcRow}>
               <Text style={s.ttcLabel}>{ti('totalTTC', lang)}</Text>
               <Text style={s.ttcValue}>{fmtAmount(totalHT)}</Text>
@@ -260,7 +262,7 @@ export function InvoiceDocument({ draft, company }: Props) {
           </View>
           <View style={s.payRow}>
             <Text style={s.payLabel}>IBAN</Text>
-            <Text style={s.payValue}>{company?.iban || '<IBAN>'}</Text>
+            <Text style={[s.payValue, p(company?.iban)]}>{company?.iban || '<IBAN>'}</Text>
           </View>
           <View style={s.payRow}>
             <Text style={lang === 'fr+en' ? s.payLabelWide : s.payLabel}>{ti('earlyPaymentDiscount', lang)}</Text>
@@ -268,7 +270,7 @@ export function InvoiceDocument({ draft, company }: Props) {
           </View>
           <View style={s.payRow}>
             <Text style={lang === 'fr+en' ? s.payLabelWide : s.payLabel}>{ti('latePaymentPenalty', lang)}</Text>
-            <Text style={s.payValue}>{draft.latePaymentPenaltyRate || (lang === 'en' ? "12% per year (3× legal interest rate)" : lang === 'fr+en' ? "12% par an / 12% per year" : "12% par an (3 fois le taux d'intérêt légal)")}</Text>
+            <Text style={s.payValue}>{draft.latePaymentPenaltyRate || (lang === 'en' ? "12% per year (3× the French legal interest rate)" : lang === 'fr+en' ? "12% par an (3× le taux d'intérêt légal) / 12% per year (3× the French legal interest rate)" : "12% par an (3× le taux d'intérêt légal)")}</Text>
           </View>
 
           {draft.isB2B ? (
