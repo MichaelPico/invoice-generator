@@ -167,6 +167,9 @@ export function InvoiceForm() {
               {company.iban && (
                 <p className="text-muted-foreground">IBAN : {company.iban}</p>
               )}
+              {company.bic && (
+                <p className="text-muted-foreground">BIC/SWIFT : {company.bic}</p>
+              )}
             </div>
           ) : (
             <p className="text-sm text-muted-foreground italic">

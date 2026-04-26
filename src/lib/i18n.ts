@@ -16,6 +16,7 @@ const labels = {
   address: { fr: 'Adresse', en: 'Address' },
   siret: { fr: 'SIRET', en: 'SIRET' },
   iban: { fr: 'IBAN', en: 'IBAN' },
+  bic: { fr: 'BIC/SWIFT (optionnel)', en: 'BIC/SWIFT (optional)' },
   save: { fr: 'Sauvegarder', en: 'Save' },
   cancel: { fr: 'Annuler', en: 'Cancel' },
 

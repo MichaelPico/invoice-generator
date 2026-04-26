@@ -7,7 +7,7 @@ import { Input } from '../ui/input';
 import { Label } from '../ui/label';
 import { Textarea } from '../ui/textarea';
 
-const EMPTY: CompanySettings = { firstName: '', lastName: '', address: '', siret: '', iban: '' };
+const EMPTY: CompanySettings = { firstName: '', lastName: '', address: '', siret: '', iban: '', bic: '' };
 
 export function CompanyConstantsForm() {
   const { company, uiLanguage, updateCompany } = useApp();
@@ -81,6 +81,16 @@ export function CompanyConstantsForm() {
           value={form.iban}
           onChange={(e) => set('iban', e.target.value)}
           placeholder="FR76 3000 6000 0112 3456 7890 189"
+        />
+      </div>
+
+      <div className="flex flex-col gap-1.5">
+        <Label htmlFor="company-bic">{t('bic', uiLanguage)}</Label>
+        <Input
+          id="company-bic"
+          value={form.bic ?? ''}
+          onChange={(e) => set('bic', e.target.value)}
+          placeholder="BNPAFRPP"
         />
       </div>
 

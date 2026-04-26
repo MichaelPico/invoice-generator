@@ -9,6 +9,7 @@ export interface CompanySettings {
   address: string;
   siret: string;
   iban: string;
+  bic?: string;
 }
 
 export interface InvoiceNumberingConfig {

@@ -127,7 +127,7 @@ function fmtDate(dateStr: string, _lang: InvoiceLanguage): string {
 function fmtAmount(n: number): string {
   const abs = Math.abs(n).toFixed(2);
   const [int, dec] = abs.split('.');
-  const intFmt = int.replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+  const intFmt = int.replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
   return (n < 0 ? '- ' : '') + intFmt + ',' + dec + ' €';
 }
 
@@ -264,6 +264,12 @@ export function InvoiceDocument({ draft, company }: Props) {
             <Text style={s.payLabel}>IBAN</Text>
             <Text style={[s.payValue, p(company?.iban)]}>{company?.iban || '<IBAN>'}</Text>
           </View>
+          {company?.bic ? (
+            <View style={s.payRow}>
+              <Text style={s.payLabel}>BIC/SWIFT</Text>
+              <Text style={s.payValue}>{company.bic}</Text>
+            </View>
+          ) : null}
           <View style={s.payRow}>
             <Text style={lang === 'fr+en' ? s.payLabelWide : s.payLabel}>{ti('earlyPaymentDiscount', lang)}</Text>
             <Text style={s.payValue}>{draft.earlyPaymentDiscount || (lang === 'fr+en' ? 'néant / none' : 'néant')}</Text>
