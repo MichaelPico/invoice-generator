@@ -8,6 +8,16 @@ import type {
   InvoiceColorScheme,
 } from '../types';
 
+export interface AppExport {
+  version: 1;
+  exportedAt: string;
+  company?: CompanySettings;
+  invoiceNumbering?: InvoiceNumberingConfig;
+  clients: (Client & { id: number })[];
+  logo?: string;
+  invoiceColors?: InvoiceColorScheme;
+}
+
 interface InvoiceDB extends DBSchema {
   company: {
     key: string;
@@ -144,4 +154,48 @@ export async function getColorScheme(): Promise<InvoiceColorScheme | undefined> 
 export async function saveColorScheme(data: InvoiceColorScheme): Promise<void> {
   const db = await getDB();
   await db.put('invoiceColors', data, 'config');
+}
+
+export async function exportAllData(): Promise<AppExport> {
+  const db = await getDB();
+  const [company, invoiceNumbering, clients, logo, invoiceColors] = await Promise.all([
+    db.get('company', 'settings'),
+    db.get('invoiceNumbering', 'config'),
+    db.getAll('clients'),
+    db.get('logo', 'data'),
+    db.get('invoiceColors', 'config'),
+  ]);
+  return {
+    version: 1,
+    exportedAt: new Date().toISOString(),
+    company,
+    invoiceNumbering,
+    clients: clients as (Client & { id: number })[],
+    logo,
+    invoiceColors,
+  };
+}
+
+export async function importAllData(data: AppExport): Promise<void> {
+  const db = await getDB();
+  const tx = db.transaction(
+    ['company', 'invoiceNumbering', 'clients', 'logo', 'invoiceColors'],
+    'readwrite',
+  );
+  await Promise.all([
+    tx.objectStore('company').clear(),
+    tx.objectStore('invoiceNumbering').clear(),
+    tx.objectStore('clients').clear(),
+    tx.objectStore('logo').clear(),
+    tx.objectStore('invoiceColors').clear(),
+  ]);
+  if (data.company) await tx.objectStore('company').put(data.company, 'settings');
+  if (data.invoiceNumbering)
+    await tx.objectStore('invoiceNumbering').put(data.invoiceNumbering, 'config');
+  for (const client of data.clients ?? [])
+    await tx.objectStore('clients').put(client);
+  if (data.logo) await tx.objectStore('logo').put(data.logo, 'data');
+  if (data.invoiceColors)
+    await tx.objectStore('invoiceColors').put(data.invoiceColors, 'config');
+  await tx.done;
 }

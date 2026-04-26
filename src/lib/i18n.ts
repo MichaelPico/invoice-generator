@@ -113,6 +113,17 @@ const labels = {
   },
   welcomeClose: { fr: 'Commencer', en: 'Get started' },
   helpButton: { fr: 'Aide', en: 'Help' },
+
+  // Data management
+  dataManagement: { fr: 'Données', en: 'Data' },
+  exportData: { fr: 'Exporter les données', en: 'Export data' },
+  importData: { fr: 'Importer des données', en: 'Import data' },
+  importWarning: {
+    fr: "Attention : l'import remplacera toutes vos données actuelles (entreprise, clients, paramètres). Cette action est irréversible.",
+    en: 'Warning: importing will replace all your current data (company, clients, settings). This action cannot be undone.',
+  },
+  confirmImport: { fr: "Confirmer l'import", en: 'Confirm import' },
+  importError: { fr: 'Fichier invalide ou corrompu.', en: 'Invalid or corrupted file.' },
 } as const;
 
 export type LabelKey = keyof typeof labels;
