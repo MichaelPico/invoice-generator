@@ -84,6 +84,35 @@ const labels = {
   companyLogo: { fr: "Logo de l'entreprise", en: 'Company logo' },
   uploadLogo: { fr: 'Télécharger un logo', en: 'Upload logo' },
   removeLogo: { fr: 'Supprimer', en: 'Remove' },
+
+  // Welcome dialog
+  welcomeTitle: { fr: 'Bienvenue sur Factures', en: 'Welcome to Factures' },
+  welcomeSubtitle: {
+    fr: 'Générateur de factures pour micro-entrepreneurs français',
+    en: 'Invoice generator for French micro-entrepreneurs',
+  },
+  welcomeFeature1Title: { fr: 'Conformité française', en: 'French law compliance' },
+  welcomeFeature1Body: {
+    fr: 'Mentions légales obligatoires pour les micro-entreprises, pré-remplies automatiquement.',
+    en: 'Mandatory legal notices for micro-enterprises, pre-filled automatically.',
+  },
+  welcomeFeature2Title: { fr: 'Exonération de TVA', en: 'VAT exemption' },
+  welcomeFeature2Body: {
+    fr: 'La mention "TVA non applicable, art. 293 B du CGI" est incluse de plein droit.',
+    en: 'The notice "TVA non applicable, art. 293 B du CGI" is included as required.',
+  },
+  welcomeFeature3Title: { fr: 'Bilingue', en: 'Bilingual' },
+  welcomeFeature3Body: {
+    fr: 'Générez vos factures en français, en anglais, ou dans les deux langues simultanément.',
+    en: 'Generate invoices in French, English, or both languages at once.',
+  },
+  welcomeFeature4Title: { fr: 'Données locales', en: 'Local-only storage' },
+  welcomeFeature4Body: {
+    fr: 'Toutes vos données restent dans votre navigateur. Rien n\'est envoyé à un serveur.',
+    en: 'All your data stays in your browser. Nothing is sent to any server.',
+  },
+  welcomeClose: { fr: 'Commencer', en: 'Get started' },
+  helpButton: { fr: 'Aide', en: 'Help' },
 } as const;
 
 export type LabelKey = keyof typeof labels;

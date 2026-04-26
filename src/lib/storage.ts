@@ -24,3 +24,11 @@ export function getLastClientId(): number | null {
 export function saveLastClientId(id: number): void {
   localStorage.setItem('lastClientId', String(id));
 }
+
+export function hasSeenWelcome(): boolean {
+  return localStorage.getItem('hasSeenWelcome') === 'true';
+}
+
+export function markWelcomeSeen(): void {
+  localStorage.setItem('hasSeenWelcome', 'true');
+}

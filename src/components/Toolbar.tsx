@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { MoonIcon, SunIcon, SettingsIcon, Trash2Icon, FileDownIcon } from 'lucide-react';
+import { MoonIcon, SunIcon, SettingsIcon, Trash2Icon, FileDownIcon, CircleHelpIcon } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import { t } from '../lib/i18n';
 import type { UILanguage } from '../types';
@@ -9,7 +9,11 @@ import { ToggleGroup, ToggleGroupItem } from './ui/toggle-group';
 import { SettingsPanel } from './settings/SettingsPanel';
 import { PDFPreviewDialog } from './invoice/PDFPreviewDialog';
 
-export function Toolbar() {
+interface ToolbarProps {
+  onHelpClick: () => void;
+}
+
+export function Toolbar({ onHelpClick }: ToolbarProps) {
   const { theme, uiLanguage, setTheme, setUILanguage, resetDraft, draft, company, logo, colorScheme, advanceCounter } = useApp();
   const colors = resolveColors(colorScheme);
   const [pdfOpen, setPdfOpen] = useState(false);
@@ -30,6 +34,16 @@ export function Toolbar() {
               </svg>
               Source
             </a>
+          </Button>
+
+          {/* Help / about */}
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={onHelpClick}
+            aria-label={t('helpButton', uiLanguage)}
+          >
+            <CircleHelpIcon className="size-4" />
           </Button>
 
           <div className="w-px h-5 bg-border mx-1" />
