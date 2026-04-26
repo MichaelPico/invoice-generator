@@ -24,7 +24,15 @@ function makeStyles(C: ResolvedColors & { danger: string }) {
     logo: { maxHeight: 40, maxWidth: 120, marginBottom: 8, objectFit: 'contain', alignSelf: 'flex-start' },
     title: { fontSize: 22, fontFamily: 'Helvetica-Bold', letterSpacing: 1.5 },
     infoBlock: { alignItems: 'flex-end' },
-    invoiceNum: { fontSize: 10, fontFamily: 'Helvetica-Bold', marginBottom: 4 },
+    invoiceNum: {
+      fontSize: 10,
+      fontFamily: 'Helvetica-Bold',
+      marginBottom: 8,
+      borderWidth: 1,
+      borderColor: C.muted,
+      paddingHorizontal: 8,
+      paddingVertical: 5,
+    },
     infoLine: { fontSize: 8.5, marginBottom: 2 },
     infoMuted: { fontFamily: 'Helvetica-Bold' },
 
@@ -33,7 +41,7 @@ function makeStyles(C: ResolvedColors & { danger: string }) {
     party: { flex: 1 },
     partyRight: { flex: 1, paddingLeft: 24 },
     partyHeading: {
-      fontSize: 7,
+      fontSize: 9,
       fontFamily: 'Helvetica-Bold',
       textTransform: 'uppercase',
       letterSpacing: 0.8,
@@ -95,7 +103,7 @@ function makeStyles(C: ResolvedColors & { danger: string }) {
     // Payment
     paySection: { marginTop: 8 },
     sectionHeading: {
-      fontSize: 7,
+      fontSize: 9,
       fontFamily: 'Helvetica-Bold',
       textTransform: 'uppercase',
       letterSpacing: 0.8,
@@ -162,7 +170,7 @@ export function InvoiceDocument({ draft, company, logo, colors = PRESET_COLORS.c
           </View>
           <View style={s.infoBlock}>
             <Text style={s.invoiceNum}>
-              <Text style={s.infoMuted}>{ti('invoiceNumberLabel', lang)} </Text>
+              <Text style={s.infoMuted}>{ti('invoiceNumberLabel', lang)} : </Text>
               <Text style={p(draft.invoiceNumber)}>{draft.invoiceNumber || '<INVOICE_NUMBER>'}</Text>
             </Text>
             <Text style={s.infoLine}>
@@ -271,39 +279,39 @@ export function InvoiceDocument({ draft, company, logo, colors = PRESET_COLORS.c
           <Text style={s.sectionHeading}>{ti('paymentSection', lang)}</Text>
 
           <View style={s.payRow}>
-            <Text style={lang === 'fr+en' ? s.payLabelWide : s.payLabel}>{ti('paymentTerms', lang)}</Text>
+            <Text style={lang === 'fr+en' ? s.payLabelWide : s.payLabel}>{ti('paymentTerms', lang)} :</Text>
             <Text style={s.payValue}>{draft.paymentTerms || (lang === 'en' ? '30 days net' : lang === 'fr+en' ? '30 jours nets / 30 days net' : '30 jours nets')}</Text>
           </View>
           <View style={s.payRow}>
-            <Text style={lang === 'fr+en' ? s.payLabelWide : s.payLabel}>{ti('paymentMethods', lang)}</Text>
+            <Text style={lang === 'fr+en' ? s.payLabelWide : s.payLabel}>{ti('paymentMethods', lang)} :</Text>
             <Text style={s.payValue}>{draft.paymentMethods || (lang === 'en' ? 'Bank transfer' : lang === 'fr+en' ? 'Virement bancaire / Bank transfer' : 'Virement bancaire')}</Text>
           </View>
           <View style={s.payRow}>
-            <Text style={s.payLabel}>IBAN</Text>
+            <Text style={s.payLabel}>IBAN :</Text>
             <Text style={[s.payValue, p(company?.iban)]}>{company?.iban || '<IBAN>'}</Text>
           </View>
           {company?.bic ? (
             <View style={s.payRow}>
-              <Text style={s.payLabel}>BIC/SWIFT</Text>
+              <Text style={s.payLabel}>BIC/SWIFT :</Text>
               <Text style={s.payValue}>{company.bic}</Text>
             </View>
           ) : null}
           <View style={s.payRow}>
-            <Text style={lang === 'fr+en' ? s.payLabelWide : s.payLabel}>{ti('earlyPaymentDiscount', lang)}</Text>
+            <Text style={lang === 'fr+en' ? s.payLabelWide : s.payLabel}>{ti('earlyPaymentDiscount', lang)} :</Text>
             <Text style={s.payValue}>{draft.earlyPaymentDiscount || (lang === 'fr+en' ? 'néant / none' : 'néant')}</Text>
           </View>
           <View style={s.payRow}>
-            <Text style={lang === 'fr+en' ? s.payLabelWide : s.payLabel}>{ti('latePaymentPenalty', lang)}</Text>
+            <Text style={lang === 'fr+en' ? s.payLabelWide : s.payLabel}>{ti('latePaymentPenalty', lang)} :</Text>
             <Text style={s.payValue}>{draft.latePaymentPenaltyRate || (lang === 'en' ? "12% per year (3× the French legal interest rate)" : lang === 'fr+en' ? "12% par an (3× le taux d'intérêt légal) / 12% per year (3× the French legal interest rate)" : "12% par an (3× le taux d'intérêt légal)")}</Text>
           </View>
 
           {draft.isB2B ? (
             <Text style={s.legalNote}>
               {lang === 'en'
-                ? 'Flat recovery fee: EUR 40 in the event of late payment (art. D. 441-5 of the French Commercial Code).'
+                ? 'Flat-rate recovery fee for collection costs: EUR 40 (art. D. 441-5 of the French Commercial Code).'
                 : lang === 'fr+en'
-                ? 'Indemnite forfaitaire de recouvrement : 40 EUR en cas de retard de paiement (art. D. 441-5 du Code de commerce). / Flat recovery fee: EUR 40 in the event of late payment (art. D. 441-5 of the French Commercial Code).'
-                : 'Indemnite forfaitaire de recouvrement : 40 EUR en cas de retard de paiement (art. D. 441-5 du Code de commerce).'}
+                ? 'Indemnité forfaitaire pour frais de recouvrement : 40 € (art. D. 441-5 du Code de commerce). / Flat-rate recovery fee for collection costs: EUR 40 (art. D. 441-5 of the French Commercial Code).'
+                : 'Indemnité forfaitaire pour frais de recouvrement : 40 € (art. D. 441-5 du Code de commerce).'}
             </Text>
           ) : null}
         </View>
