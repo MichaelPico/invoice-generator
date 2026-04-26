@@ -3,13 +3,15 @@ import { MoonIcon, SunIcon, SettingsIcon, Trash2Icon, FileDownIcon } from 'lucid
 import { useApp } from '../context/AppContext';
 import { t } from '../lib/i18n';
 import type { UILanguage } from '../types';
+import { resolveColors } from '../lib/colorPresets';
 import { Button } from './ui/button';
 import { ToggleGroup, ToggleGroupItem } from './ui/toggle-group';
 import { SettingsPanel } from './settings/SettingsPanel';
 import { PDFPreviewDialog } from './invoice/PDFPreviewDialog';
 
 export function Toolbar() {
-  const { theme, uiLanguage, setTheme, setUILanguage, resetDraft, draft, company, logo, advanceCounter } = useApp();
+  const { theme, uiLanguage, setTheme, setUILanguage, resetDraft, draft, company, logo, colorScheme, advanceCounter } = useApp();
+  const colors = resolveColors(colorScheme);
   const [pdfOpen, setPdfOpen] = useState(false);
 
   return (
@@ -91,6 +93,7 @@ export function Toolbar() {
           draft={draft}
           company={company}
           logo={logo}
+          colors={colors}
           open={pdfOpen}
           onClose={() => setPdfOpen(false)}
           onDownloaded={() => void advanceCounter()}

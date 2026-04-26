@@ -11,6 +11,7 @@ import {
 import { Separator } from '../ui/separator';
 import { CompanyConstantsForm } from './CompanyConstantsForm';
 import { InvoiceNumberingForm } from './InvoiceNumberingForm';
+import { InvoiceColorsForm } from './InvoiceColorsForm';
 
 interface SettingsPanelProps {
   trigger: ReactNode;
@@ -45,6 +46,15 @@ export function SettingsPanel({ trigger }: SettingsPanelProps) {
               {t('invoiceNumberingSettings', uiLanguage)}
             </h3>
             <InvoiceNumberingForm />
+          </section>
+
+          <Separator />
+
+          <section className="flex flex-col gap-4">
+            <h3 className="text-sm font-semibold text-foreground">
+              {t('invoiceAppearance', uiLanguage)}
+            </h3>
+            <InvoiceColorsForm />
           </section>
         </div>
       </SheetContent>

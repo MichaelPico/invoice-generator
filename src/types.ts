@@ -1,4 +1,15 @@
 export type Theme = 'light' | 'dark';
+export type InvoiceColorPreset = 'classic' | 'indigo' | 'slate' | 'custom';
+
+export interface InvoiceColorScheme {
+  preset: InvoiceColorPreset;
+  custom: {
+    black: string;
+    muted: string;
+    border: string;
+    bg: string;
+  };
+}
 export type UILanguage = 'fr' | 'en';
 export type InvoiceLanguage = 'fr' | 'en' | 'fr+en';
 export type NumberFormat = 'YYYY-SEQ' | 'YYYY-MM-SEQ' | 'CUSTOM-YYYY-SEQ';

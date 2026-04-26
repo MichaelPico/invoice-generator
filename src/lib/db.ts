@@ -5,6 +5,7 @@ import type {
   InvoiceNumberingConfig,
   Client,
   InvoiceDraft,
+  InvoiceColorScheme,
 } from '../types';
 
 interface InvoiceDB extends DBSchema {
@@ -28,10 +29,14 @@ interface InvoiceDB extends DBSchema {
     key: string;
     value: string;
   };
+  invoiceColors: {
+    key: string;
+    value: InvoiceColorScheme;
+  };
 }
 
 const DB_NAME = 'invoice-generator';
-const DB_VERSION = 2;
+const DB_VERSION = 3;
 
 function getDB() {
   return openDB<InvoiceDB>(DB_NAME, DB_VERSION, {
@@ -44,6 +49,9 @@ function getDB() {
       }
       if (oldVersion < 2) {
         db.createObjectStore('logo');
+      }
+      if (oldVersion < 3) {
+        db.createObjectStore('invoiceColors');
       }
     },
   });
@@ -126,4 +134,14 @@ export async function saveLogo(dataUrl: string): Promise<void> {
 export async function clearLogo(): Promise<void> {
   const db = await getDB();
   await db.delete('logo', 'data');
+}
+
+export async function getColorScheme(): Promise<InvoiceColorScheme | undefined> {
+  const db = await getDB();
+  return db.get('invoiceColors', 'config');
+}
+
+export async function saveColorScheme(data: InvoiceColorScheme): Promise<void> {
+  const db = await getDB();
+  await db.put('invoiceColors', data, 'config');
 }

@@ -6,6 +6,7 @@ import type {
   InvoiceDraft,
   Theme,
   UILanguage,
+  InvoiceColorScheme,
 } from '../types';
 import {
   getCompany,
@@ -23,7 +24,10 @@ import {
   getLogo,
   saveLogo,
   clearLogo,
+  getColorScheme,
+  saveColorScheme,
 } from '../lib/db';
+import { DEFAULT_COLOR_SCHEME } from '../lib/colorPresets';
 import { getTheme, saveTheme, getUILanguage, saveUILanguage } from '../lib/storage';
 
 export const DEFAULT_NUMBERING: InvoiceNumberingConfig = {
@@ -41,6 +45,7 @@ interface AppContextValue {
   clients: Client[];
   draft: InvoiceDraft | null;
   logo: string | null;
+  colorScheme: InvoiceColorScheme;
   resetKey: number;
   setTheme: (t: Theme) => void;
   setUILanguage: (l: UILanguage) => void;
@@ -53,6 +58,7 @@ interface AppContextValue {
   updateDraft: (d: InvoiceDraft) => Promise<void>;
   resetDraft: () => Promise<void>;
   updateLogo: (dataUrl: string | null) => Promise<void>;
+  updateColorScheme: (s: InvoiceColorScheme) => Promise<void>;
 }
 
 const AppContext = createContext<AppContextValue | null>(null);
@@ -72,6 +78,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const [clients, setClients] = useState<Client[]>([]);
   const [draft, setDraft] = useState<InvoiceDraft | null>(null);
   const [logo, setLogo] = useState<string | null>(null);
+  const [colorScheme, setColorScheme] = useState<InvoiceColorScheme>(DEFAULT_COLOR_SCHEME);
   const [resetKey, setResetKey] = useState(0);
 
   useEffect(() => {
@@ -79,18 +86,20 @@ export function AppProvider({ children }: { children: ReactNode }) {
     setUILanguageState(getUILanguage());
 
     async function load() {
-      const [comp, num, cls, drft, lg] = await Promise.all([
+      const [comp, num, cls, drft, lg, cs] = await Promise.all([
         getCompany(),
         getNumbering(),
         getAllClients(),
         getDraft(),
         getLogo(),
+        getColorScheme(),
       ]);
       if (comp) setCompany(comp);
       if (num) setNumbering(num);
       setClients(cls);
       if (drft) setDraft(drft);
       if (lg) setLogo(lg);
+      if (cs) setColorScheme(cs);
       setLoading(false);
     }
     load();
@@ -151,6 +160,11 @@ export function AppProvider({ children }: { children: ReactNode }) {
     setResetKey((k) => k + 1);
   }
 
+  async function updateColorScheme(s: InvoiceColorScheme) {
+    await saveColorScheme(s);
+    setColorScheme(s);
+  }
+
   async function updateLogo(dataUrl: string | null) {
     if (dataUrl) {
       await saveLogo(dataUrl);
@@ -181,6 +195,8 @@ export function AppProvider({ children }: { children: ReactNode }) {
     updateDraft,
     resetDraft,
     updateLogo,
+    colorScheme,
+    updateColorScheme,
   };
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;

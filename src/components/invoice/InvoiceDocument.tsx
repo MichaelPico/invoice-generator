@@ -1,121 +1,114 @@
 import { Document, Page, Text, View, StyleSheet, Image } from '@react-pdf/renderer';
 import { format, parseISO } from 'date-fns';
 import type { CompanySettings, InvoiceDraft, InvoiceLanguage } from '../../types';
+import type { ResolvedColors } from '../../lib/colorPresets';
+import { PRESET_COLORS } from '../../lib/colorPresets';
 import { ti } from '../../lib/i18n';
 
-const C = {
-  black: '#111111',
-  muted: '#71717a',
-  border: '#e4e4e7',
-  bg: '#f9fafb',
-  danger: '#ef4444',
-} as const;
+const DANGER = '#ef4444';
 
-const missing = { color: C.danger } as const;
-function p(value: string | undefined | null) {
-  return value ? undefined : missing;
+function makeStyles(C: ResolvedColors & { danger: string }) {
+  return StyleSheet.create({
+    page: {
+      fontFamily: 'Helvetica',
+      fontSize: 9,
+      color: C.black,
+      paddingHorizontal: 48,
+      paddingTop: 48,
+      paddingBottom: 60,
+      lineHeight: 1.5,
+    },
+
+    // Header
+    header: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 28 },
+    logo: { maxHeight: 40, maxWidth: 120, marginBottom: 8, objectFit: 'contain', alignSelf: 'flex-start' },
+    title: { fontSize: 22, fontFamily: 'Helvetica-Bold', letterSpacing: 1.5 },
+    infoBlock: { alignItems: 'flex-end' },
+    invoiceNum: { fontSize: 10, fontFamily: 'Helvetica-Bold', marginBottom: 4 },
+    infoLine: { fontSize: 8.5, marginBottom: 2 },
+    infoMuted: { fontFamily: 'Helvetica-Bold' },
+
+    // Parties
+    parties: { flexDirection: 'row', marginBottom: 20 },
+    party: { flex: 1 },
+    partyRight: { flex: 1, paddingLeft: 24 },
+    partyHeading: {
+      fontSize: 7,
+      fontFamily: 'Helvetica-Bold',
+      textTransform: 'uppercase',
+      letterSpacing: 0.8,
+      color: C.muted,
+      marginBottom: 6,
+    },
+    partyPrimary: { fontFamily: 'Helvetica-Bold', marginBottom: 2 },
+    partySecondary: { fontSize: 8.5, fontFamily: 'Helvetica-Bold' },
+
+    // Divider
+    divider: { borderBottomWidth: 1, borderBottomColor: C.border, marginVertical: 16 },
+
+    // Table
+    tableHeaderRow: {
+      flexDirection: 'row',
+      paddingVertical: 6,
+      paddingHorizontal: 6,
+      backgroundColor: C.bg,
+      borderBottomWidth: 1,
+      borderBottomColor: C.border,
+    },
+    tableRow: {
+      flexDirection: 'row',
+      paddingVertical: 5,
+      paddingHorizontal: 6,
+      borderBottomWidth: 0.5,
+      borderBottomColor: C.border,
+    },
+    colDesc: { flex: 1, paddingRight: 8 },
+    colQty: { width: 32, textAlign: 'right', paddingHorizontal: 4 },
+    colUnit: { width: 70, textAlign: 'right', paddingHorizontal: 4 },
+    colTotal: { width: 70, textAlign: 'right', paddingLeft: 4 },
+    thText: { fontSize: 7.5, fontFamily: 'Helvetica-Bold', textTransform: 'uppercase', color: C.muted },
+
+    // Totals
+    totalsOuter: { alignItems: 'flex-end', marginTop: 10 },
+    totalsBlock: { width: 220 },
+    totalRow: { flexDirection: 'row', justifyContent: 'space-between', paddingVertical: 2 },
+    totalLabel: {},
+    totalValue: { fontFamily: 'Helvetica-Bold' },
+    ttcRow: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      paddingVertical: 5,
+      marginTop: 3,
+      borderTopWidth: 1,
+      borderTopColor: C.border,
+    },
+    ttcLabel: { fontFamily: 'Helvetica-Bold', fontSize: 10 },
+    ttcValue: { fontFamily: 'Helvetica-Bold', fontSize: 10 },
+    vatMention: { fontSize: 7.5, fontStyle: 'italic', marginTop: 6, textAlign: 'right' },
+
+    // Seller fields
+    sellerRow: { flexDirection: 'row', marginBottom: 2 },
+    sellerLabel: { width: 88, fontSize: 8.5, fontFamily: 'Helvetica-Bold' },
+    clientLabel: { width: 130, fontSize: 8.5, fontFamily: 'Helvetica-Bold' },
+    sellerValue: { flex: 1, fontSize: 8.5 },
+
+    // Payment
+    paySection: { marginTop: 8 },
+    sectionHeading: {
+      fontSize: 7,
+      fontFamily: 'Helvetica-Bold',
+      textTransform: 'uppercase',
+      letterSpacing: 0.8,
+      color: C.muted,
+      marginBottom: 8,
+    },
+    payRow: { flexDirection: 'row', marginBottom: 3 },
+    payLabel: { width: 96, fontSize: 8.5, fontFamily: 'Helvetica-Bold' },
+    payLabelWide: { width: 220, fontSize: 8.5, paddingRight: 8, fontFamily: 'Helvetica-Bold' },
+    payValue: { flex: 1, fontSize: 8.5 },
+    legalNote: { fontSize: 7.5, marginTop: 10, lineHeight: 1.6 },
+  });
 }
-
-const s = StyleSheet.create({
-  page: {
-    fontFamily: 'Helvetica',
-    fontSize: 9,
-    color: C.black,
-    paddingHorizontal: 48,
-    paddingTop: 48,
-    paddingBottom: 60,
-    lineHeight: 1.5,
-  },
-
-  // Header
-  header: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 28 },
-  logo: { maxHeight: 40, maxWidth: 120, marginBottom: 8, objectFit: 'contain', alignSelf: 'flex-start' },
-  title: { fontSize: 22, fontFamily: 'Helvetica-Bold', letterSpacing: 1.5 },
-  infoBlock: { alignItems: 'flex-end' },
-  invoiceNum: { fontSize: 10, fontFamily: 'Helvetica-Bold', marginBottom: 4 },
-  infoLine: { fontSize: 8.5, marginBottom: 2 },
-  infoMuted: { color: C.muted },
-
-  // Parties
-  parties: { flexDirection: 'row', marginBottom: 20 },
-  party: { flex: 1 },
-  partyRight: { flex: 1, paddingLeft: 24 },
-  partyHeading: {
-    fontSize: 7,
-    fontFamily: 'Helvetica-Bold',
-    textTransform: 'uppercase',
-    letterSpacing: 0.8,
-    color: C.muted,
-    marginBottom: 6,
-  },
-  partyPrimary: { fontFamily: 'Helvetica-Bold', marginBottom: 2 },
-  partySecondary: { color: C.muted, fontSize: 8.5 },
-
-  // Divider
-  divider: { borderBottomWidth: 1, borderBottomColor: C.border, marginVertical: 16 },
-
-  // Table
-  tableHeaderRow: {
-    flexDirection: 'row',
-    paddingVertical: 6,
-    paddingHorizontal: 6,
-    backgroundColor: C.bg,
-    borderBottomWidth: 1,
-    borderBottomColor: C.border,
-  },
-  tableRow: {
-    flexDirection: 'row',
-    paddingVertical: 5,
-    paddingHorizontal: 6,
-    borderBottomWidth: 0.5,
-    borderBottomColor: C.border,
-  },
-  colDesc: { flex: 1, paddingRight: 8 },
-  colQty: { width: 32, textAlign: 'right', paddingHorizontal: 4 },
-  colUnit: { width: 70, textAlign: 'right', paddingHorizontal: 4 },
-  colTotal: { width: 70, textAlign: 'right', paddingLeft: 4 },
-  thText: { fontSize: 7.5, fontFamily: 'Helvetica-Bold', textTransform: 'uppercase', color: C.muted },
-
-  // Totals
-  totalsOuter: { alignItems: 'flex-end', marginTop: 10 },
-  totalsBlock: { width: 220 },
-  totalRow: { flexDirection: 'row', justifyContent: 'space-between', paddingVertical: 2 },
-  totalLabel: { color: C.muted },
-  totalValue: { fontFamily: 'Helvetica-Bold' },
-  ttcRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingVertical: 5,
-    marginTop: 3,
-    borderTopWidth: 1,
-    borderTopColor: C.border,
-  },
-  ttcLabel: { fontFamily: 'Helvetica-Bold', fontSize: 10 },
-  ttcValue: { fontFamily: 'Helvetica-Bold', fontSize: 10 },
-  vatMention: { fontSize: 7.5, color: C.muted, fontStyle: 'italic', marginTop: 6, textAlign: 'right' },
-
-  // Seller fields
-  sellerRow: { flexDirection: 'row', marginBottom: 2 },
-  sellerLabel: { color: C.muted, width: 88, fontSize: 8.5 },
-  clientLabel: { color: C.muted, width: 130, fontSize: 8.5 },
-  sellerValue: { flex: 1, fontSize: 8.5 },
-
-  // Payment
-  paySection: { marginTop: 8 },
-  sectionHeading: {
-    fontSize: 7,
-    fontFamily: 'Helvetica-Bold',
-    textTransform: 'uppercase',
-    letterSpacing: 0.8,
-    color: C.muted,
-    marginBottom: 8,
-  },
-  payRow: { flexDirection: 'row', marginBottom: 3 },
-  payLabel: { color: C.muted, width: 96, fontSize: 8.5 },
-  payLabelWide: { color: C.muted, width: 220, fontSize: 8.5, paddingRight: 8 },
-  payValue: { flex: 1, fontSize: 8.5 },
-  legalNote: { fontSize: 7.5, color: C.muted, marginTop: 10, lineHeight: 1.6 },
-});
 
 function fmtDate(dateStr: string, _lang: InvoiceLanguage): string {
   if (!dateStr) return '';
@@ -130,7 +123,7 @@ function fmtAmount(n: number): string {
   const abs = Math.abs(n).toFixed(2);
   const [int, dec] = abs.split('.');
   const intFmt = int.replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
-  return (n < 0 ? '- ' : '') + intFmt + ',' + dec + ' €';
+  return (n < 0 ? '- ' : '') + intFmt + ',' + dec + ' €';
 }
 
 function invoiceTitle(lang: InvoiceLanguage): string {
@@ -143,11 +136,19 @@ interface Props {
   draft: InvoiceDraft;
   company: CompanySettings | null;
   logo?: string | null;
+  colors?: ResolvedColors;
 }
 
-export function InvoiceDocument({ draft, company, logo }: Props) {
+export function InvoiceDocument({ draft, company, logo, colors = PRESET_COLORS.classic }: Props) {
   const lang = draft.invoiceLanguage;
   const totalHT = draft.lineItems.reduce((sum, li) => sum + li.quantity * li.unitPriceHT, 0);
+
+  const C = { ...colors, danger: DANGER };
+  const s = makeStyles(C);
+  const missing = { color: C.danger } as const;
+  function p(value: string | undefined | null) {
+    return value ? undefined : missing;
+  }
 
   return (
     <Document>

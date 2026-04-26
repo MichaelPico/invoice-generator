@@ -9,6 +9,7 @@ const labels = {
   // Settings panel headings
   companySettings: { fr: "Informations de l'entreprise", en: 'Company Information' },
   invoiceNumberingSettings: { fr: 'Numérotation des factures', en: 'Invoice Numbering' },
+  invoiceAppearance: { fr: 'Apparence', en: 'Appearance' },
 
   // Company form
   firstName: { fr: 'Prénom', en: 'First name' },

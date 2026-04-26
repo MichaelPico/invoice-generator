@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { pdf } from '@react-pdf/renderer';
 import { DownloadIcon, XIcon } from 'lucide-react';
 import type { CompanySettings, InvoiceDraft } from '../../types';
+import type { ResolvedColors } from '../../lib/colorPresets';
 import { Button } from '../ui/button';
 import { Dialog, DialogContent } from '../ui/dialog';
 import { InvoiceDocument } from './InvoiceDocument';
@@ -10,12 +11,13 @@ interface Props {
   draft: InvoiceDraft;
   company: CompanySettings | null;
   logo?: string | null;
+  colors?: ResolvedColors;
   open: boolean;
   onClose: () => void;
   onDownloaded: () => void;
 }
 
-export function PDFPreviewDialog({ draft, company, logo, open, onClose, onDownloaded }: Props) {
+export function PDFPreviewDialog({ draft, company, logo, colors, open, onClose, onDownloaded }: Props) {
   const [pdfUrl, setPdfUrl] = useState<string | null>(null);
   const [generating, setGenerating] = useState(false);
 
@@ -23,19 +25,21 @@ export function PDFPreviewDialog({ draft, company, logo, open, onClose, onDownlo
   const capturedDraft = useRef(draft);
   const capturedCompany = useRef(company);
   const capturedLogo = useRef(logo);
+  const capturedColors = useRef(colors);
 
   useEffect(() => {
     if (!open) return;
     capturedDraft.current = draft;
     capturedCompany.current = company;
     capturedLogo.current = logo;
+    capturedColors.current = colors;
 
     let url: string | null = null;
     let cancelled = false;
     setGenerating(true);
     setPdfUrl(null);
 
-    pdf(<InvoiceDocument draft={capturedDraft.current} company={capturedCompany.current} logo={capturedLogo.current} />)
+    pdf(<InvoiceDocument draft={capturedDraft.current} company={capturedCompany.current} logo={capturedLogo.current} colors={capturedColors.current} />)
       .toBlob()
       .then((blob) => {
         if (cancelled) return;
