@@ -7,7 +7,7 @@ import { ToggleGroup, ToggleGroupItem } from './ui/toggle-group';
 import { SettingsPanel } from './settings/SettingsPanel';
 
 export function Toolbar() {
-  const { theme, uiLanguage, setTheme, setUILanguage } = useApp();
+  const { theme, uiLanguage, setTheme, setUILanguage, resetDraft } = useApp();
 
   return (
     <header className="sticky top-0 z-40 flex items-center justify-between border-b border-border bg-background/95 backdrop-blur px-6 h-14 gap-4">
@@ -59,7 +59,12 @@ export function Toolbar() {
         />
 
         {/* Clear Form */}
-        <Button variant="ghost" size="sm" className="gap-1.5 text-muted-foreground" disabled>
+        <Button
+          variant="ghost"
+          size="sm"
+          className="gap-1.5 text-muted-foreground"
+          onClick={() => void resetDraft()}
+        >
           <Trash2Icon className="size-4" />
           {t('clearForm', uiLanguage)}
         </Button>

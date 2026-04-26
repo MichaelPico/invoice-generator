@@ -37,6 +37,7 @@ interface AppContextValue {
   numbering: InvoiceNumberingConfig;
   clients: Client[];
   draft: InvoiceDraft | null;
+  resetKey: number;
   setTheme: (t: Theme) => void;
   setUILanguage: (l: UILanguage) => void;
   updateCompany: (c: CompanySettings) => Promise<void>;
@@ -65,6 +66,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const [numbering, setNumbering] = useState<InvoiceNumberingConfig>(DEFAULT_NUMBERING);
   const [clients, setClients] = useState<Client[]>([]);
   const [draft, setDraft] = useState<InvoiceDraft | null>(null);
+  const [resetKey, setResetKey] = useState(0);
 
   useEffect(() => {
     setThemeState(getTheme());
@@ -138,6 +140,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
   async function resetDraft() {
     await clearDraft();
     setDraft(null);
+    setResetKey((k) => k + 1);
   }
 
   const value: AppContextValue = {
@@ -148,6 +151,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
     numbering,
     clients,
     draft,
+    resetKey,
     setTheme,
     setUILanguage,
     updateCompany,
