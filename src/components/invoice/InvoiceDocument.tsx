@@ -142,7 +142,7 @@ export function InvoiceDocument({ draft, company }: Props) {
         <View style={s.header}>
           <Text style={s.title}>{invoiceTitle(lang)}</Text>
           <View style={s.infoBlock}>
-            <Text style={s.invoiceNum}>{draft.invoiceNumber}</Text>
+            <Text style={s.invoiceNum}>{draft.invoiceNumber || '<INVOICE_NUMBER>'}</Text>
             <Text style={s.infoLine}>
               <Text style={s.infoMuted}>{ti('invoiceDate', lang)} : </Text>
               {fmtDate(draft.invoiceDate, lang)}
@@ -180,8 +180,8 @@ export function InvoiceDocument({ draft, company }: Props) {
 
           <View style={s.partyRight}>
             <Text style={s.partyHeading}>{ti('clientInfo', lang)}</Text>
-            <Text style={s.partyPrimary}>{draft.client.name}</Text>
-            <Text style={s.partySecondary}>{draft.client.address}</Text>
+            <Text style={s.partyPrimary}>{draft.client.name || '<CLIENT_NAME>'}</Text>
+            <Text style={s.partySecondary}>{draft.client.address || '<ADDRESS>'}</Text>
             {draft.isB2B && draft.client.siren ? (
               <Text style={s.partySecondary}>SIREN : {draft.client.siren}</Text>
             ) : null}
@@ -205,7 +205,7 @@ export function InvoiceDocument({ draft, company }: Props) {
           </View>
           {draft.lineItems.map((li) => (
             <View key={li.id} style={s.tableRow}>
-              <Text style={s.colDesc}>{li.description}</Text>
+              <Text style={s.colDesc}>{li.description || '<DESCRIPTION>'}</Text>
               <Text style={s.colQty}>{li.quantity}</Text>
               <Text style={s.colUnit}>{fmtAmount(li.unitPriceHT)}</Text>
               <Text style={s.colTotal}>{fmtAmount(li.quantity * li.unitPriceHT)}</Text>
@@ -221,7 +221,7 @@ export function InvoiceDocument({ draft, company }: Props) {
               <Text style={s.totalValue}>{fmtAmount(totalHT)}</Text>
             </View>
             <View style={s.ttcRow}>
-              <Text style={s.ttcLabel}>{ti('totalHT', lang)}</Text>
+              <Text style={s.ttcLabel}>{ti('totalTTC', lang)}</Text>
               <Text style={s.ttcValue}>{fmtAmount(totalHT)}</Text>
             </View>
           </View>
