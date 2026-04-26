@@ -38,6 +38,7 @@ function freshDraft(
     dueDate: plusDays(30),
     isB2B: isB2B ?? false,
     client: client ?? { name: '', address: '' },
+    quantityLabel: '',
     lineItems: [{ id: crypto.randomUUID(), description: '', quantity: 1, unitPriceHT: 0 }],
     paymentTerms: '',
     paymentMethods: iban ? `Virement bancaire - IBAN : ${iban}` : '',
@@ -285,6 +286,16 @@ export function InvoiceForm() {
         <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
           {uiLanguage === 'fr' ? 'Prestations' : 'Services'}
         </h3>
+
+        <div className="flex items-center gap-2">
+          <label className="text-xs text-muted-foreground whitespace-nowrap">{t('quantityLabel', uiLanguage)}</label>
+          <Input
+            value={form.quantityLabel}
+            onChange={(e) => setForm((f) => ({ ...f, quantityLabel: e.target.value }))}
+            placeholder={t('quantity', uiLanguage)}
+            className="h-7 w-36 text-sm"
+          />
+        </div>
 
         <div className="overflow-x-auto">
           <table className="w-full text-sm">

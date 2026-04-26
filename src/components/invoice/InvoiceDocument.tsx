@@ -71,9 +71,9 @@ function makeStyles(C: ResolvedColors & { danger: string }) {
       borderBottomColor: C.border,
     },
     colDesc: { flex: 1, paddingRight: 8 },
-    colQty: { width: 32, textAlign: 'right', paddingHorizontal: 4 },
-    colUnit: { width: 70, textAlign: 'right', paddingHorizontal: 4 },
-    colTotal: { width: 70, textAlign: 'right', paddingLeft: 4 },
+    colQty: { width: 52, textAlign: 'right', paddingHorizontal: 4, borderLeftWidth: 0.5, borderLeftColor: C.border },
+    colUnit: { width: 70, textAlign: 'right', paddingHorizontal: 4, borderLeftWidth: 0.5, borderLeftColor: C.border },
+    colTotal: { width: 70, textAlign: 'right', paddingLeft: 4, borderLeftWidth: 0.5, borderLeftColor: C.border },
     thText: { fontSize: 7.5, fontFamily: 'Helvetica-Bold', textTransform: 'uppercase', color: C.muted },
 
     // Totals
@@ -251,7 +251,7 @@ export function InvoiceDocument({ draft, company, logo, colors = PRESET_COLORS.c
           {draft.lineItems.map((li) => (
             <View key={li.id} style={s.tableRow}>
               <Text style={[s.colDesc, p(li.description)]}>{li.description || '<DESCRIPTION>'}</Text>
-              <Text style={s.colQty}>{li.quantity}</Text>
+              <Text style={s.colQty}>{draft.quantityLabel ? `${li.quantity} ${draft.quantityLabel}` : li.quantity}</Text>
               <Text style={s.colUnit}>{fmtAmount(li.unitPriceHT)}</Text>
               <Text style={s.colTotal}>{fmtAmount(li.quantity * li.unitPriceHT)}</Text>
             </View>

@@ -56,6 +56,7 @@ const labels = {
   // Line items
   description: { fr: 'Description', en: 'Description' },
   quantity: { fr: 'Qté', en: 'Qty' },
+  quantityLabel: { fr: 'Unité de quantité', en: 'Quantity unit' },
   unitPrice: { fr: 'Prix unitaire HT', en: 'Unit price (excl. VAT)' },
   lineTotal: { fr: 'Total HT', en: 'Total (excl. VAT)' },
   addLine: { fr: 'Ajouter une ligne', en: 'Add line' },
