@@ -57,6 +57,21 @@ export function InvoiceForm() {
     return () => clearTimeout(timer);
   }, [form]);
 
+  // Track what the auto-generated invoice number was at last sync point.
+  // When numbering changes (counter advance or format change), update the
+  // displayed number only if the user hasn't manually edited it.
+  const lastAutoNumber = useRef(formatInvoiceNumber(numbering));
+  useEffect(() => {
+    const next = formatInvoiceNumber(numbering);
+    setForm((prev) => {
+      const shouldUpdate = prev.invoiceNumber === lastAutoNumber.current;
+      lastAutoNumber.current = next;
+      if (!shouldUpdate || prev.invoiceNumber === next) return prev;
+      return { ...prev, invoiceNumber: next };
+    });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [numbering.counter, numbering.format, numbering.customPrefix]);
+
   function update(patch: Partial<InvoiceDraft>) {
     setForm((prev) => ({ ...prev, ...patch }));
   }
