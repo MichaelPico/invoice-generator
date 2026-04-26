@@ -5,6 +5,7 @@ const labels = {
   settings: { fr: 'Paramètres', en: 'Settings' },
   clearForm: { fr: 'Effacer', en: 'Clear Form' },
   generatePDF: { fr: 'Générer PDF', en: 'Generate PDF' },
+  previewPDF: { fr: 'Aperçu', en: 'Preview' },
 
   // Settings panel headings
   companySettings: { fr: "Informations de l'entreprise", en: 'Company Information' },

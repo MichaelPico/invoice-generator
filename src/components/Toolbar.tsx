@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { MoonIcon, SunIcon, SettingsIcon, Trash2Icon, FileDownIcon, CircleHelpIcon } from 'lucide-react';
+import { MoonIcon, SunIcon, SettingsIcon, Trash2Icon, FileDownIcon, CircleHelpIcon, EyeIcon, EyeOffIcon } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import { t } from '../lib/i18n';
 import type { UILanguage } from '../types';
@@ -11,9 +11,11 @@ import { PDFPreviewDialog } from './invoice/PDFPreviewDialog';
 
 interface ToolbarProps {
   onHelpClick: () => void;
+  previewOpen: boolean;
+  onTogglePreview: () => void;
 }
 
-export function Toolbar({ onHelpClick }: ToolbarProps) {
+export function Toolbar({ onHelpClick, previewOpen, onTogglePreview }: ToolbarProps) {
   const { theme, uiLanguage, setTheme, setUILanguage, resetDraft, draft, company, logo, colorScheme, advanceCounter } = useApp();
   const colors = resolveColors(colorScheme);
   const [pdfOpen, setPdfOpen] = useState(false);
@@ -99,6 +101,18 @@ export function Toolbar({ onHelpClick }: ToolbarProps) {
           >
             <Trash2Icon className="size-4" />
             {t('clearForm', uiLanguage)}
+          </Button>
+
+          {/* Preview toggle */}
+          <Button
+            variant={previewOpen ? 'secondary' : 'ghost'}
+            size="sm"
+            className="gap-1.5"
+            disabled={!draft}
+            onClick={onTogglePreview}
+          >
+            {previewOpen ? <EyeOffIcon className="size-4" /> : <EyeIcon className="size-4" />}
+            {t('previewPDF', uiLanguage)}
           </Button>
 
           {/* Generate PDF */}
