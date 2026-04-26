@@ -15,4 +15,5 @@ Client and company data (SIRET, name, address, etc.) are stored locally in the b
 
 ## Docs
 
-- [Design & Context](DESIGN.md)
+- [Design & Context](docs/DESIGN.md) - architecture, tech stack, business context, and planned improvements
+- [Invoice Design](docs/INVOICE-DESIGN.md) - French legal requirements (mentions obligatoires), VAT exemption rules, and project-specific invoice rules
