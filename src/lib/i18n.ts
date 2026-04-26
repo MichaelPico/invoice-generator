@@ -71,8 +71,8 @@ const labels = {
   latePaymentPenalty: { fr: 'Taux de pénalités en cas de retard', en: 'Late payment penalty rate' },
   earlyPaymentDiscount: { fr: "Conditions d'escompte", en: 'Early payment discount' },
   flatRecoveryFee: {
-    fr: 'Indemnité forfaitaire de recouvrement : 40 €',
-    en: 'Flat recovery fee: EUR 40',
+    fr: 'Indemnité forfaitaire pour frais de recouvrement : 40 € (art. D. 441-5 du Code de commerce).',
+    en: 'Flat-rate recovery fee for collection costs: EUR 40 (art. D. 441-5 of the French Commercial Code).',
   },
 
   // Entrepreneur label prefix

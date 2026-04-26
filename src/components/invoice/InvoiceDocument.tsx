@@ -79,9 +79,6 @@ function makeStyles(C: ResolvedColors & { danger: string }) {
     // Totals
     totalsOuter: { alignItems: 'flex-end', marginTop: 10 },
     totalsBlock: { width: 220 },
-    totalRow: { flexDirection: 'row', justifyContent: 'space-between', paddingVertical: 2 },
-    totalLabel: {},
-    totalValue: { fontFamily: 'Helvetica-Bold' },
     ttcRow: {
       flexDirection: 'row',
       justifyContent: 'space-between',
@@ -155,7 +152,7 @@ export function InvoiceDocument({ draft, company, logo, colors = PRESET_COLORS.c
   const s = makeStyles(C);
   const missing = { color: C.danger } as const;
   function p(value: string | undefined | null) {
-    return value ? undefined : missing;
+    return value ? {} : missing;
   }
 
   return (
@@ -206,7 +203,7 @@ export function InvoiceDocument({ draft, company, logo, colors = PRESET_COLORS.c
               <Text style={[s.sellerValue, p(company?.firstName)]}>{company?.firstName || '<PRÉNOM>'}</Text>
             </View>
             <View style={s.sellerRow}>
-              <Text style={s.sellerLabel}>Numéro de Siret :</Text>
+              <Text style={s.sellerLabel}>{ti('siret', lang)} :</Text>
               <Text style={[s.sellerValue, p(company?.siret)]}>{company?.siret || '<SIRET>'}</Text>
             </View>
             <View style={s.sellerRow}>
@@ -269,7 +266,13 @@ export function InvoiceDocument({ draft, company, logo, colors = PRESET_COLORS.c
               <Text style={s.ttcValue}>{fmtAmount(totalHT)}</Text>
             </View>
           </View>
-          <Text style={s.vatMention}>TVA non applicable, art. 293 B du CGI</Text>
+          <Text style={s.vatMention}>
+            {lang === 'en'
+              ? 'Not subject to VAT (Art. 293 B of the French Tax Code)'
+              : lang === 'fr+en'
+              ? 'TVA non applicable, art. 293 B du CGI / Not subject to VAT (Art. 293 B of the French Tax Code)'
+              : 'TVA non applicable, art. 293 B du CGI'}
+          </Text>
         </View>
 
         <View style={s.divider} />
@@ -298,7 +301,7 @@ export function InvoiceDocument({ draft, company, logo, colors = PRESET_COLORS.c
           ) : null}
           <View style={s.payRow}>
             <Text style={lang === 'fr+en' ? s.payLabelWide : s.payLabel}>{ti('earlyPaymentDiscount', lang)} :</Text>
-            <Text style={s.payValue}>{draft.earlyPaymentDiscount || (lang === 'fr+en' ? 'néant / none' : 'néant')}</Text>
+            <Text style={s.payValue}>{draft.earlyPaymentDiscount || (lang === 'fr' ? 'néant' : lang === 'fr+en' ? 'néant / none' : 'none')}</Text>
           </View>
           <View style={s.payRow}>
             <Text style={lang === 'fr+en' ? s.payLabelWide : s.payLabel}>{ti('latePaymentPenalty', lang)} :</Text>
@@ -306,13 +309,7 @@ export function InvoiceDocument({ draft, company, logo, colors = PRESET_COLORS.c
           </View>
 
           {draft.isB2B ? (
-            <Text style={s.legalNote}>
-              {lang === 'en'
-                ? 'Flat-rate recovery fee for collection costs: EUR 40 (art. D. 441-5 of the French Commercial Code).'
-                : lang === 'fr+en'
-                ? 'Indemnité forfaitaire pour frais de recouvrement : 40 € (art. D. 441-5 du Code de commerce). / Flat-rate recovery fee for collection costs: EUR 40 (art. D. 441-5 of the French Commercial Code).'
-                : 'Indemnité forfaitaire pour frais de recouvrement : 40 € (art. D. 441-5 du Code de commerce).'}
-            </Text>
+            <Text style={s.legalNote}>{ti('flatRecoveryFee', lang)}</Text>
           ) : null}
         </View>
 
