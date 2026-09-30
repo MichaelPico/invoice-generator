@@ -226,7 +226,7 @@ export function InvoiceDocument({ draft, company, logo, colors = PRESET_COLORS.c
             </View>
             {draft.isB2B && draft.client.siren ? (
               <View style={s.sellerRow}>
-                <Text style={s.clientLabel}>SIREN :</Text>
+                <Text style={s.clientLabel}>{ti('companyNumber', lang)} :</Text>
                 <Text style={s.sellerValue}>{draft.client.siren}</Text>
               </View>
             ) : null}

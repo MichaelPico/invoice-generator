@@ -38,6 +38,7 @@ const labels = {
   name: { fr: 'Nom', en: 'Name' },
   vatNumber: { fr: 'Numéro de TVA', en: 'VAT number' },
   siren: { fr: 'SIREN', en: 'SIREN' },
+  companyNumber: { fr: "N° d'immatriculation", en: 'Company No.' },
   notes: { fr: 'Notes', en: 'Notes' },
   b2b: { fr: 'B2B', en: 'B2B' },
   b2c: { fr: 'B2C', en: 'B2C' },
