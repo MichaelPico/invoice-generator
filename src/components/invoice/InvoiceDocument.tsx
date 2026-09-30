@@ -109,7 +109,7 @@ function makeStyles(C: ResolvedColors & { danger: string }) {
       marginBottom: 8,
     },
     payRow: { flexDirection: 'row', marginBottom: 3 },
-    payLabel: { width: 96, fontSize: 8.5, fontFamily: 'Helvetica-Bold' },
+    payLabel: { width: 175, fontSize: 8.5, paddingRight: 8, fontFamily: 'Helvetica-Bold' },
     payLabelWide: { width: 220, fontSize: 8.5, paddingRight: 8, fontFamily: 'Helvetica-Bold' },
     payValue: { flex: 1, fontSize: 8.5 },
     legalNote: { fontSize: 7.5, marginTop: 10, lineHeight: 1.6 },
@@ -145,6 +145,7 @@ export function InvoiceDocument({ draft, company, logo, colors = PRESET_COLORS.c
 
   const C = { ...colors, danger: DANGER };
   const s = makeStyles(C);
+  const payLabel = lang === 'fr+en' ? s.payLabelWide : s.payLabel;
   const missing = { color: C.danger } as const;
   function p(value: string | undefined | null) {
     return value ? {} : missing;
@@ -282,29 +283,29 @@ export function InvoiceDocument({ draft, company, logo, colors = PRESET_COLORS.c
           <Text style={s.sectionHeading}>{ti('paymentSection', lang)}</Text>
 
           <View style={s.payRow}>
-            <Text style={lang === 'fr+en' ? s.payLabelWide : s.payLabel}>{ti('paymentTerms', lang)} :</Text>
+            <Text style={payLabel}>{ti('paymentTerms', lang)} :</Text>
             <Text style={s.payValue}>{draft.paymentTerms || (lang === 'en' ? '30 days net' : lang === 'fr+en' ? '30 jours nets / 30 days net' : '30 jours nets')}</Text>
           </View>
           <View style={s.payRow}>
-            <Text style={lang === 'fr+en' ? s.payLabelWide : s.payLabel}>{ti('paymentMethods', lang)} :</Text>
+            <Text style={payLabel}>{ti('paymentMethods', lang)} :</Text>
             <Text style={s.payValue}>{draft.paymentMethods || (lang === 'en' ? 'Bank transfer' : lang === 'fr+en' ? 'Virement bancaire / Bank transfer' : 'Virement bancaire')}</Text>
           </View>
           <View style={s.payRow}>
-            <Text style={s.payLabel}>IBAN :</Text>
+            <Text style={payLabel}>IBAN :</Text>
             <Text style={[s.payValue, p(company?.iban)]}>{company?.iban || '<IBAN>'}</Text>
           </View>
           {company?.bic ? (
             <View style={s.payRow}>
-              <Text style={s.payLabel}>BIC/SWIFT :</Text>
+              <Text style={payLabel}>BIC/SWIFT :</Text>
               <Text style={s.payValue}>{company.bic}</Text>
             </View>
           ) : null}
           <View style={s.payRow}>
-            <Text style={lang === 'fr+en' ? s.payLabelWide : s.payLabel}>{ti('earlyPaymentDiscount', lang)} :</Text>
+            <Text style={payLabel}>{ti('earlyPaymentDiscount', lang)} :</Text>
             <Text style={s.payValue}>{draft.earlyPaymentDiscount || (lang === 'fr' ? 'néant' : lang === 'fr+en' ? 'néant / none' : 'none')}</Text>
           </View>
           <View style={s.payRow}>
-            <Text style={lang === 'fr+en' ? s.payLabelWide : s.payLabel}>{ti('latePaymentPenalty', lang)} :</Text>
+            <Text style={payLabel}>{ti('latePaymentPenalty', lang)} :</Text>
             <Text style={s.payValue}>{draft.latePaymentPenaltyRate || (lang === 'en' ? "12% per year (3× the French legal interest rate)" : lang === 'fr+en' ? "12% par an (3× le taux d'intérêt légal) / 12% per year (3× the French legal interest rate)" : "12% par an (3× le taux d'intérêt légal)")}</Text>
           </View>
 
