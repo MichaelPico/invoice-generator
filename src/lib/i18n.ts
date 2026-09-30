@@ -53,6 +53,9 @@ const labels = {
   invoiceLanguage: { fr: 'Langue de la facture', en: 'Invoice language' },
   invoiceDate: { fr: 'Date de facture', en: 'Invoice date' },
   serviceDate: { fr: 'Date de prestation', en: 'Service date' },
+  serviceStartDate: { fr: 'Début de prestation', en: 'Service start' },
+  serviceEndDate: { fr: 'Fin de prestation', en: 'Service end' },
+  servicePeriod: { fr: 'Période de prestation', en: 'Service period' },
   dueDate: { fr: "Date d'échéance", en: 'Due date' },
 
   // Line items

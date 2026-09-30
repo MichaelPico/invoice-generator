@@ -37,6 +37,7 @@ function freshDraft(
     invoiceLanguage: 'fr',
     invoiceDate: today(),
     serviceDate: today(),
+    serviceEndDate: '',
     dueDate: plusDays(30),
     isB2B: isB2B ?? false,
     client: client ?? { name: '', address: '' },
@@ -133,6 +134,9 @@ export function InvoiceForm() {
     serviceDate: fr
       ? 'Date à laquelle la prestation a été réalisée. Peut différer de la date de facture. Laissez vide pour ne pas l\'afficher.'
       : 'Date the work was performed. Can differ from the invoice date. Leave empty to omit.',
+    serviceEndDate: fr
+      ? 'Renseignez une date de fin pour facturer une période (ex. un mois de prestation). Laissez vide pour une date unique.'
+      : 'Set an end date to bill for a period (e.g. one month of services). Leave empty for a single date.',
     dueDate: fr
       ? 'Date limite de paiement affichée sur la facture. Laissez vide pour ne pas l\'afficher.'
       : 'Payment deadline shown on the invoice. Leave empty to omit.',
@@ -212,8 +216,12 @@ export function InvoiceForm() {
             <DateInput id="invoiceDate" value={form.invoiceDate} onChange={(v) => update({ invoiceDate: v })} />
           </div>
           <div className="flex-1 min-w-36 space-y-1.5">
-            <Label htmlFor="serviceDate">{t('serviceDate', uiLanguage)}<OptionalBadge label={fr ? 'optionnel' : 'optional'} /> <FieldHint text={hints.serviceDate} /></Label>
+            <Label htmlFor="serviceDate">{t('serviceStartDate', uiLanguage)}<OptionalBadge label={fr ? 'optionnel' : 'optional'} /> <FieldHint text={hints.serviceDate} /></Label>
             <DateInput id="serviceDate" value={form.serviceDate} onChange={(v) => update({ serviceDate: v })} />
+          </div>
+          <div className="flex-1 min-w-36 space-y-1.5">
+            <Label htmlFor="serviceEndDate">{t('serviceEndDate', uiLanguage)}<OptionalBadge label={fr ? 'optionnel' : 'optional'} /> <FieldHint text={hints.serviceEndDate} /></Label>
+            <DateInput id="serviceEndDate" value={form.serviceEndDate ?? ''} onChange={(v) => update({ serviceEndDate: v })} />
           </div>
           <div className="flex-1 min-w-36 space-y-1.5">
             <Label htmlFor="dueDate">{t('dueDate', uiLanguage)}<OptionalBadge label={fr ? 'optionnel' : 'optional'} /> <FieldHint text={hints.dueDate} /></Label>

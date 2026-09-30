@@ -51,6 +51,7 @@ export interface InvoiceDraft {
   invoiceLanguage: InvoiceLanguage;
   invoiceDate: string;
   serviceDate: string;
+  serviceEndDate?: string;
   dueDate: string;
   isB2B: boolean;
   client: {

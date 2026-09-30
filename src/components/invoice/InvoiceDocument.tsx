@@ -169,7 +169,12 @@ export function InvoiceDocument({ draft, company, logo, colors = PRESET_COLORS.c
               <Text style={s.infoMuted}>{ti('invoiceDate', lang)} : </Text>
               {fmtDate(draft.invoiceDate, lang)}
             </Text>
-            {draft.serviceDate ? (
+            {draft.serviceDate && draft.serviceEndDate && draft.serviceEndDate !== draft.serviceDate ? (
+              <Text style={s.infoLine}>
+                <Text style={s.infoMuted}>{ti('servicePeriod', lang)} : </Text>
+                {fmtDate(draft.serviceDate, lang)} – {fmtDate(draft.serviceEndDate, lang)}
+              </Text>
+            ) : draft.serviceDate ? (
               <Text style={s.infoLine}>
                 <Text style={s.infoMuted}>{ti('serviceDate', lang)} : </Text>
                 {fmtDate(draft.serviceDate, lang)}

@@ -105,7 +105,8 @@ interface InvoiceDraft {
   invoiceNumber: string;       // may be overridden by user; auto-computed otherwise
   invoiceLanguage: InvoiceLanguage; // PDF output language; independent of the app UI language
   invoiceDate: string;         // ISO date string
-  serviceDate: string;
+  serviceDate: string;         // service date, or start of the service period
+  serviceEndDate?: string;     // optional end of the service period
   dueDate: string;
   isB2B: boolean;
   client: {

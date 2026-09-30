@@ -29,7 +29,7 @@ The form is the primary surface. It is always present and fills the viewport. Se
   Invoice language           FR | EN | FR+EN (controls PDF output language)
   Invoice number             auto-incremented, format shown, editable override
   Invoice date               date picker, defaults to today
-  Service date               date picker, separate from invoice date
+  Service start / end        date pickers, separate from invoice date; end is optional (single date if empty)
   Due date                   date picker
 
 [ Line Items ]
