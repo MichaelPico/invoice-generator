@@ -8,6 +8,7 @@ import {
   InputGroupInput,
 } from "../ui/input-group";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
+import { toLocalISODate } from "../../lib/dates";
 
 function formatDate(date: Date | undefined): string {
   if (!date || isNaN(date.getTime())) return "";
@@ -21,7 +22,7 @@ function isoToDate(iso: string): Date | undefined {
 }
 
 function dateToISO(date: Date): string {
-  return date.toISOString().split("T")[0];
+  return toLocalISODate(date);
 }
 
 interface Props {

@@ -2,6 +2,7 @@ import { useRef, useState } from 'react';
 import { useApp } from '../../context/AppContext';
 import { t } from '../../lib/i18n';
 import { exportAllData, importAllData, type AppExport } from '../../lib/db';
+import { toLocalISODate } from '../../lib/dates';
 import { Button } from '../ui/button';
 
 export function DataManagementForm() {
@@ -15,7 +16,7 @@ export function DataManagementForm() {
     const data = await exportAllData();
     const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
-    const date = new Date().toISOString().slice(0, 10);
+    const date = toLocalISODate(new Date());
     const a = document.createElement('a');
     a.href = url;
     a.download = `factures-export-${date}.json`;

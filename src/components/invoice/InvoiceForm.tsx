@@ -5,6 +5,7 @@ import { t } from '../../lib/i18n';
 import { formatInvoiceNumber } from '../../lib/invoiceNumber';
 import { getLastClientId, saveLastClientId } from '../../lib/storage';
 import { CURRENCIES, formatAmount } from '../../lib/currencies';
+import { toLocalISODate } from '../../lib/dates';
 import type { InvoiceDraft, InvoiceLanguage, LineItem } from '../../types';
 import { Button } from '../ui/button';
 import { FieldHint, OptionalBadge } from '../ui/field-hint';
@@ -18,11 +19,13 @@ import { ClientManagerDialog } from './ClientManagerDialog';
 import { DateInput } from './DateInput';
 
 function today() {
-  return new Date().toISOString().split('T')[0];
+  return toLocalISODate(new Date());
 }
 
 function plusDays(days: number) {
-  return new Date(Date.now() + days * 864e5).toISOString().split('T')[0];
+  const d = new Date();
+  d.setDate(d.getDate() + days);
+  return toLocalISODate(d);
 }
 
 
