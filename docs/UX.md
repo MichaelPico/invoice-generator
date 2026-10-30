@@ -82,6 +82,7 @@ Opened by a "Manage clients" link in the client dropdown. Shows a list of saved 
 - Address
 - VAT number (optional)
 - SIREN (optional, for future e-invoicing compliance)
+- Reference (optional, printed on the client's invoices, e.g. a purchase order number)
 - Notes (free text)
 
 ---

@@ -64,7 +64,7 @@ export function InvoiceForm() {
     return freshDraft(
       numbering,
       company?.iban,
-      lastClient ? { id: lastClient.id, name: lastClient.name, address: lastClient.address, vatNumber: lastClient.vatNumber, siren: lastClient.siren } : undefined,
+      lastClient ? { id: lastClient.id, name: lastClient.name, address: lastClient.address, vatNumber: lastClient.vatNumber, siren: lastClient.siren, reference: lastClient.reference } : undefined,
       lastClient?.isB2B,
     );
   });
@@ -149,6 +149,9 @@ export function InvoiceForm() {
     siren: fr
       ? 'Numéro d\'identification de l\'entreprise cliente — les 9 premiers chiffres du SIRET.'
       : 'French business register number — the first 9 digits of the SIRET.',
+    reference: fr
+      ? 'Référence demandée par le client (ex. numéro de bon de commande). Affichée sur la facture. Laissez vide pour ne pas l\'afficher.'
+      : 'Reference requested by the client (e.g. a purchase order number). Printed on the invoice. Leave empty to omit.',
     quantityLabel: fr
       ? 'Unité affichée après les quantités (ex. "h", "jours", "unités"). Laissez vide pour afficher uniquement les chiffres.'
       : 'Unit appended after quantities (e.g. "h", "days", "units"). Leave empty to show numbers only.',
@@ -302,6 +305,7 @@ export function InvoiceForm() {
                   address: c.address,
                   vatNumber: c.vatNumber,
                   siren: c.siren,
+                  reference: c.reference,
                 });
               }}
             />
@@ -346,6 +350,14 @@ export function InvoiceForm() {
                 </div>
               </>
             )}
+            <div className="space-y-1.5">
+              <Label htmlFor="clientReference">{t('reference', uiLanguage)}<OptionalBadge label={fr ? 'optionnel' : 'optional'} /> <FieldHint text={hints.reference} /></Label>
+              <Input
+                id="clientReference"
+                value={form.client.reference ?? ''}
+                onChange={(e) => updateClient({ reference: e.target.value })}
+              />
+            </div>
           </div>
         </div>
       </section>

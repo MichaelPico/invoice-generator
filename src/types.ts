@@ -36,6 +36,7 @@ export interface Client {
   isB2B?: boolean;
   vatNumber?: string;
   siren?: string;
+  reference?: string;
   notes?: string;
 }
 
@@ -60,6 +61,7 @@ export interface InvoiceDraft {
     address: string;
     vatNumber?: string;
     siren?: string;
+    reference?: string;
   };
   currency: string;
   quantityLabel: string;

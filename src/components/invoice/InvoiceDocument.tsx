@@ -187,6 +187,12 @@ export function InvoiceDocument({ draft, company, logo, colors = PRESET_COLORS.c
                 {fmtDate(draft.dueDate, lang)}
               </Text>
             ) : null}
+            {draft.client.reference ? (
+              <Text style={s.infoLine}>
+                <Text style={s.infoMuted}>{ti('reference', lang)} : </Text>
+                {draft.client.reference}
+              </Text>
+            ) : null}
           </View>
         </View>
 

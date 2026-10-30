@@ -79,6 +79,7 @@ interface Client {
   address: string;
   vatNumber?: string;    // buyer VAT ID (optional; required for B2B if total > EUR 150)
   siren?: string;        // for future e-invoicing compliance (2026-2027 rollout)
+  reference?: string;    // printed on the client's invoices (e.g. a purchase order number)
   notes?: string;
 }
 ```
@@ -114,6 +115,7 @@ interface InvoiceDraft {
     address: string;
     vatNumber?: string;
     siren?: string;
+    reference?: string;
   };
   lineItems: LineItem[];
   paymentTerms: string;

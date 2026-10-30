@@ -26,6 +26,7 @@ const emptyForm = (): FormState => ({
   isB2B: false,
   vatNumber: '',
   siren: '',
+  reference: '',
   notes: '',
 });
 
@@ -39,7 +40,7 @@ export function ClientManagerDialog() {
   }
 
   function startEdit(c: Client) {
-    setEditing({ id: c.id, name: c.name, address: c.address, isB2B: c.isB2B ?? false, vatNumber: c.vatNumber ?? '', siren: c.siren ?? '', notes: c.notes ?? '' });
+    setEditing({ id: c.id, name: c.name, address: c.address, isB2B: c.isB2B ?? false, vatNumber: c.vatNumber ?? '', siren: c.siren ?? '', reference: c.reference ?? '', notes: c.notes ?? '' });
   }
 
   function cancelEdit() {
@@ -55,6 +56,7 @@ export function ClientManagerDialog() {
       isB2B: data.isB2B ?? false,
       vatNumber: data.vatNumber?.trim() || undefined,
       siren: data.siren?.trim() || undefined,
+      reference: data.reference?.trim() || undefined,
       notes: data.notes?.trim() || undefined,
     };
     if (!payload.name) return;
@@ -141,6 +143,15 @@ export function ClientManagerDialog() {
                 </Label>
                 <Input id="cm-siren" value={editing.siren ?? ''} onChange={(e) => patch('siren', e.target.value)} />
               </div>
+            </div>
+            <div className="space-y-1.5">
+              <Label htmlFor="cm-reference">
+                {t('reference', uiLanguage)}<OptionalBadge label={uiLanguage === 'fr' ? 'optionnel' : 'optional'} />{' '}
+                <FieldHint text={uiLanguage === 'fr'
+                  ? 'Référence demandée par ce client (ex. numéro de bon de commande). Affichée sur ses factures.'
+                  : 'Reference requested by this client (e.g. a purchase order number). Printed on their invoices.'} />
+              </Label>
+              <Input id="cm-reference" value={editing.reference ?? ''} onChange={(e) => patch('reference', e.target.value)} />
             </div>
             <div className="space-y-1.5">
               <Label htmlFor="cm-notes">
